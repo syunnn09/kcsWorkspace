@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<style>
+table {
+    border-collapse: collapse;
+}
+.head, .notification, .schedule, .bottom {
+    max-width: 1000px;
+}
+.schedule-item {
+    width: calc(1000px / 7);
+}
+.schedules {
+    min-height: 70px;
+}
+p {
+    margin-bottom: 0;
+}
+</style>
+<body>
+    <center>
+        <h1>社内グループウェア</h1>
+
+        <div class="head">
+            <div class="mb-3 d-flex gap-3 justify-content-around">
+                <p th:text="'所属: ' + ${user.departmentName}"></p>
+                <p th:text="'役職: ' + ${user.roll}"></p>
+                <p th:text="'氏名: ' + ${user.username}"></p>
+                <a th:href="@{/logout}">ログアウト</a>
+            </div>
+        </div>
+
+        <div th:if="${notifications}" class="notification mb-5">
+            <p class="text-start">【お知らせ】</p>
+            <ul class="list-group text-start">
+                <li th:each="notification : ${notifications}" th:text="${notification.message}" class="list-group-item"></li>
+            </ul>
+        </div>
+
+        <div class="schedule mb-5">
+            <p class="text-start">【個人スケジュール】</p>
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/portal(ad=${prevAd})}"><<</a>
+                <a th:href="@{/portal}">今週</a>
+                <a th:href="@{/portal(ad=${nextAd})}">>></a>
+            </div>
+    
+            <div class="d-flex justify-content-center border-end border-danger">
+                <div th:each="p : ${personal}" class="border-start border-top border-bottom border-danger schedule-item">
+                    <div th:each="map : ${p}">
+                        <div class="h position-relative">
+                            <div class="border-bottom border-danger p-3">
+                                [[${map.key}]]
+                            </div>
+                            <a th:href="@{/portal/regist?status=personal&day={day}(day=${map.key})}" class="plus position-absolute end-0 bottom-0">+</a>
+                        </div>
+                        <div class="schedules">
+                            <div th:each="schedule : ${map.value.schedules}" class="d-flex justify-content-between">
+                                <p th:text="${schedule.title}"></p>
+                                <p><span th:text="${schedule.startTime}"></span> ~ <span th:text="${schedule.endTime}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule mb-5">
+            <p class="text-start">【チームスケジュール】</p>
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/portal(ad=${prevAd})}"><<</a>
+                <a th:href="@{/portal}">今週</a>
+                <a th:href="@{/portal(ad=${nextAd})}">>></a>
+            </div>
+    
+            <div class="d-flex justify-content-center border-end border-danger">
+                <div th:each="p : ${team}" class="border-start border-top border-bottom border-danger schedule-item">
+                    <div th:each="map : ${p}">
+                        <div class="h position-relative">
+                            <div class="border-bottom border-danger p-3">
+                                [[${map.key}]]
+                            </div>
+                            <a th:href="@{/portal/regist?status=team&day={day}(day=${map.key})}" class="plus position-absolute end-0 bottom-0">+</a>
+                        </div>
+                        <div class="schedules">
+                            <div th:each="schedule : ${map.value.schedules}" class="d-flex justify-content-between">
+                                <p th:text="${schedule.title}"></p>
+                                <p><span th:text="${schedule.startTime}"></span> ~ <span th:text="${schedule.endTime}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom d-flex justify-content-between">
+            <div class="item">
+                <p>【スケジュール管理】</p>
+                <p class="text-start"><a th:href="@{/portal/regist?status=personal}">個人</a></p>
+                <p class="text-start"><a th:href="@{/portal/regist?status=team}">チーム</a></p>
+                <p class="text-start"><a th:href="@{/portal/facility}">施設・設備予約</a></p>
+            </div>
+            <div class="item">
+                <p>【SNS】</p>
+                <p class="text-start"><a th:href="@{/portal/message}">メッセージ</a></p>
+                <p class="text-start"><a th:href="@{/portal/bbs}">社内掲示板</a></p>
+            </div>
+            <div class="item">
+                <p>【オフィス】</p>
+                <p class="text-start"><a th:href="@{/portal/report}">報告書関連</a></p>
+                <p class="text-start"><a th:href="@{/portal/phone}">電話メモ</a></p>
+            </div>
+            <div class="item">
+                <p>【設定】</p>
+                <p class="text-start"><a th:href="@{/portal/settings/personal}">個人</a></p>
+                <p class="text-start"><a th:href="@{/portal/settings/manage}">管理</a></p>
+            </div>
+        </div>
+    </center>
+</body>
+</html>
