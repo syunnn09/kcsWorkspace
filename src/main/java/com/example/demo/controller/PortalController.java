@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,5 +87,19 @@ public class PortalController {
 		}
 		scheduleService.save(schedule, user.getUserid());
 		return "redirect:/portal";
+	}
+
+	List<String> texts = new ArrayList<>();
+
+	@GetMapping("bbs")
+	public String bbs(Model model) {
+		model.addAttribute("bbs", texts);
+		return "bbs";
+	}
+
+	@PostMapping("bbs")
+	public String doBbs(@PathParam("text") String text) {
+		this.texts.add(text);
+		return "redirect:bbs";
 	}
 }
