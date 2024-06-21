@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.Schedules;
+import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.form.ScheduleForm;
 import com.example.demo.service.NotificationService;
+import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +31,9 @@ public class PortalController {
 
 	@Autowired
 	ScheduleService scheduleService;
+
+	@Autowired
+	PortalService portalService;
 
 	private String redirectLogin() {
 		return "redirect:/login";
@@ -94,12 +99,26 @@ public class PortalController {
 	@GetMapping("bbs")
 	public String bbs(Model model) {
 		model.addAttribute("bbs", texts);
+		List<Thread> threads = portalService.getAllThreads();
+		model.addAttribute(threads);
+		System.out.println(threads);
 		return "bbs";
 	}
 
 	@PostMapping("bbs")
 	public String doBbs(@PathParam("text") String text) {
 		this.texts.add(text);
+		return "redirect:bbs";
+	}
+
+	@GetMapping("create_thread")
+	public String createThread() {
+		return "create_thread";
+	}
+
+	@PostMapping("create_thread")
+	public String create(@PathParam("title") String title) {
+		portalService.saveThread(title);
 		return "redirect:bbs";
 	}
 }

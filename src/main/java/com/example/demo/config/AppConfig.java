@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.example.demo.service.impl.NotificationServiceImpl;
+import com.example.demo.service.impl.PortalServiceImpl;
 import com.example.demo.service.impl.ScheduleServiceImpl;
 import com.example.demo.service.impl.UserServiceImpl;
 
@@ -23,5 +24,10 @@ public class AppConfig {
 	@Bean(name = "scheduleService")
 	ScheduleServiceImpl scheduleService() {
 		return new ScheduleServiceImpl();
+	}
+
+	@Bean(name = "portalService")
+	PortalServiceImpl portalService() {
+		return new PortalServiceImpl();
 	}
 }

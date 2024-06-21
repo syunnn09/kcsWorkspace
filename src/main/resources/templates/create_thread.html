@@ -15,17 +15,12 @@ p {
     <center>
         <h1>社内グループウェア</h1>
 
-        <div th:each="text : ${bbs}">
-            <p th:text="${text}"></p>
-        </div>
+        <p>新規スレッド作成</p>
 
-        <div th:each="thread : ${threads}">
-            <p th:text="${thread.title}"></p>
-        </div>
-        <!-- <form method="post">
-            <input type="text" name="text">
-            <input type="submit" value="送信">
-        </form> -->
+        <form method="post">
+            <input type="text" name="title">
+            <input type="submit" value="作成">
+        </form>
     </center>
 </body>
 </html>
