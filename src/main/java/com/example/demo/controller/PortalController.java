@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
@@ -18,6 +20,7 @@ import com.example.demo.form.ScheduleForm;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
+import com.example.demo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
@@ -25,6 +28,9 @@ import jakarta.websocket.server.PathParam;
 @Controller
 @RequestMapping("/portal")
 public class PortalController {
+
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	NotificationService service;
@@ -100,8 +106,7 @@ public class PortalController {
 	public String bbs(Model model) {
 		model.addAttribute("bbs", texts);
 		List<Thread> threads = portalService.getAllThreads();
-		model.addAttribute(threads);
-		System.out.println(threads);
+		model.addAttribute("threads", threads);
 		return "bbs";
 	}
 
@@ -109,6 +114,14 @@ public class PortalController {
 	public String doBbs(@PathParam("text") String text) {
 		this.texts.add(text);
 		return "redirect:bbs";
+	}
+
+	@GetMapping("bbs/{title}")
+	public String bbsDetail(@PathVariable String title, Model model) {
+		List<Bbs> bbs = portalService.getBbs(title);
+		bbs.forEach(b -> b.setUser(portalService.getUser(b)));
+		model.addAttribute("bbs", bbs);
+		return "thread_detail";
 	}
 
 	@GetMapping("create_thread")

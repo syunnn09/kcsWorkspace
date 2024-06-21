@@ -15,18 +15,9 @@ p {
     <center>
         <h1>社内グループウェア</h1>
 
-        <div th:each="text : ${bbs}">
-            <p th:text="${text}"></p>
+        <div th:each="b : ${bbs}">
+            <p th:text="${b.text}"></p>
         </div>
-
-        <p>【スレッド一覧】</p>
-        <div th:each="thread : ${threads}">
-            <a th:href="@{/portal/bbs/{title}(title=${thread.title})}" th:text="${thread.title}"></a>
-        </div>
-        <!-- <form method="post">
-            <input type="text" name="text">
-            <input type="submit" value="送信">
-        </form> -->
     </center>
 </body>
 </html>

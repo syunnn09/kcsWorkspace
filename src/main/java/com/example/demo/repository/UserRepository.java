@@ -9,5 +9,8 @@ import com.example.demo.entity.User;
 public interface UserRepository extends CrudRepository<User, String> {
 
 	@Query("SELECT userid, username, roll, departmentId, dep.name as departmentName FROM users INNER JOIN department as dep ON users.departmentId = dep.ID WHERE userid=:id AND password=:password")
-	public User login(@Param("id") String id, @Param("password") String password);
+	public User getUser(@Param("id") String id, @Param("password") String password);
+
+	@Query("SELECT userid, username, roll, departmentId, dep.name as departmentName FROM users INNER JOIN department as dep ON users.departmentId = dep.ID WHERE userid=:id")
+	public User getUser(@Param("id") String id);
 }

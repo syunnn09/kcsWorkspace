@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User login(String id, String pass) {
-		return repo.login(id, pass); 
+		return repo.getUser(id, pass); 
 	}
 
 }
