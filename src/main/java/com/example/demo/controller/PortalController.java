@@ -102,4 +102,9 @@ public class PortalController {
 		this.texts.add(text);
 		return "redirect:bbs";
 	}
+
+	@GetMapping("/message")
+	public String message() {
+		return "chat";
+	}
 }

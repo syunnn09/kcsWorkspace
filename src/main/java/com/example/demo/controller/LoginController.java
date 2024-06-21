@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,8 +20,23 @@ public class LoginController {
 	@Autowired
 	UserService service;
 
+	private boolean isLogined(HttpSession session) {
+		return session.getAttribute("user") != null;
+	}
+
+	@GetMapping("")
+	public String index(HttpSession session) {
+		if (isLogined(session)) {
+			return "redirect:/portal";
+		}
+		return "redirect:login";
+	}
+
 	@GetMapping(value={"login", "/login"})
-	public String login(@ModelAttribute UserForm form) {
+	public String login(HttpSession session) {
+		if (isLogined(session)) {
+			return "redirect:/portal";
+		}
 		return "login";
 	}
 
