@@ -15,6 +15,6 @@ public interface ThreadRepository extends CrudRepository<Thread, Integer> {
 	@Query("INSERT INTO thread(title) VALUES(:title)")
 	public void insert(String title);
 
-	@Query("SELECT * FROM bbs INNER JOIN thread ON bbs.thread_id = thread.id WHERE thread.title=:title")
-	public List<Bbs> getBbs(String title);
+	@Query("SELECT * FROM bbs WHERE thread_id=:id")
+	public List<Bbs> getBbs(int id);
 }

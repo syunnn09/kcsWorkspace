@@ -7,17 +7,27 @@
     <title>Document</title>
 </head>
 <style>
+body {
+    max-width: 1000px;
+}
 p {
     margin-bottom: 0;
 }
 </style>
 <body>
-    <center>
+    <div class="d-flex justify-content-center align-items-center flex-column">
         <h1>社内グループウェア</h1>
+        <h3>[[${title}]]</h3>
 
-        <div th:each="b : ${bbs}">
+        <div th:each="b, stat : ${bbs}">
+            <dt>[[${stat.count}]] 名前: [[${b.username}]] [[${b.postTime}]] ID: [[${b.userid}]]</dt>
             <p th:text="${b.text}"></p>
         </div>
-    </center>
+        <form method="post" th:object="${bbsForm}">
+            <input type="hidden" th:field="*{thread_id}" th:value="${thread_id}">
+            <input type="text" name="text">
+            <input type="submit" value="書き込む">
+        </form>
+    </div>
 </body>
 </html>

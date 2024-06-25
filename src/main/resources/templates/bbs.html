@@ -21,7 +21,7 @@ p {
 
         <p>【スレッド一覧】</p>
         <div th:each="thread : ${threads}">
-            <a th:href="@{/portal/bbs/{title}(title=${thread.title})}" th:text="${thread.title}"></a>
+            <a th:href="@{/portal/bbs/thread(id=${thread.id})}" th:text="${thread.title}"></a>
         </div>
         <!-- <form method="post">
             <input type="text" name="text">

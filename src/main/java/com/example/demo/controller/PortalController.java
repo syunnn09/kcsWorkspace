@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,6 +15,7 @@ import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
+import com.example.demo.form.BbsForm;
 import com.example.demo.form.ScheduleForm;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
@@ -110,18 +110,40 @@ public class PortalController {
 		return "bbs";
 	}
 
-	@PostMapping("bbs")
-	public String doBbs(@PathParam("text") String text) {
-		this.texts.add(text);
-		return "redirect:bbs";
+	@GetMapping("bbs/thread")
+	public String bbsDetail(@ModelAttribute BbsForm form, @PathParam("id") int id, Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return redirectLogin();
+		}
+
+		List<Bbs> bbs = portalService.getBbs(id);
+		if (bbs.size() == 0) {
+			return "redirect:/portal/bbs";
+		}
+		bbs.forEach(b -> b.setUser(portalService.getUser(b)));
+		String title = "プロ野球";
+		form.setThread_id(id);
+		model.addAttribute("bbs", bbs);
+		model.addAttribute("title", title);
+		return "thread_detail";
 	}
 
-	@GetMapping("bbs/{title}")
-	public String bbsDetail(@PathVariable String title, Model model) {
-		List<Bbs> bbs = portalService.getBbs(title);
-		bbs.forEach(b -> b.setUser(portalService.getUser(b)));
-		model.addAttribute("bbs", bbs);
-		return "thread_detail";
+	@PostMapping("bbs/thread")
+	public String writeBbs(
+		@ModelAttribute BbsForm bbs,
+		@PathParam("thread_id") int id,
+		@PathParam("text") String text,
+		HttpSession session
+	) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return redirectLogin();
+		}
+
+		bbs.setUserid(user.getUserid());
+		portalService.saveBbs(bbs);
+		return "redirect:/portal/bbs/thread?id=" + id;
 	}
 
 	@GetMapping("create_thread")

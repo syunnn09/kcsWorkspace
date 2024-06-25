@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
+import com.example.demo.form.BbsForm;
+import com.example.demo.repository.BbsRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PortalService;
@@ -21,6 +23,9 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	BbsRepository bbsRepository;
 
 	@Override
 	public List<Thread> getAllThreads() {
@@ -36,12 +41,17 @@ public class PortalServiceImpl implements PortalService {
 	}
 
 	@Override
-	public List<Bbs> getBbs(String title) {
-		return threadRepository.getBbs(title);
+	public List<Bbs> getBbs(int id) {
+		return threadRepository.getBbs(id);
 	}
 
 	@Override
 	public User getUser(Bbs bbs) {
 		return userRepository.getUser(bbs.getUserid());
+	}
+
+	@Override
+	public void saveBbs(BbsForm bbs) {
+		bbsRepository.save(bbs);
 	}
 }
