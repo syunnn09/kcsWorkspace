@@ -13,8 +13,8 @@
         align-items: center;
     }
     .main {
-        min-width: 800px;
-        max-width: 1000px;
+        min-width: 700px;
+        max-width: 900px;
     }
     table {
         width: 100%;
@@ -60,6 +60,7 @@
         cursor: pointer;
         user-select: none;
         color: #f00;
+        padding: 0 !important;
     }
     .time {
         width: 40%;
@@ -72,6 +73,15 @@
         outline: none;
         overflow: auto;
         resize: none;
+    }
+
+    @media print {
+        .main {
+            max-width: 700px;
+        }
+        input[type=button], #add, .delete {
+            display: none;
+        }
     }
 </style>
 <body>
@@ -87,8 +97,8 @@
                     <th>作業実施日</th>
                 </tr>
                 <tr>
-                    <td>[[${user.departmentName}]]</td>
-                    <td>[[${user.name}]]</td>
+                    <td class="center">[[${user.departmentName}]]</td>
+                    <td class="center">[[${user.name}]]</td>
                     <td class="impDate right">
                         <input type="text" th:field="*{year}">年
                         <input type="text" th:field="*{month}">月
@@ -99,15 +109,15 @@
             <table id="main">
                 <tr>
                     <th></th>
-                    <th colspan="4">作業時間</th>
-                    <th colspan="6">作業内容</th>
+                    <th colspan="3">作業時間</th>
+                    <th colspan="7">作業内容</th>
                     <th colspan="2">進捗</th>
                     <th colspan="2">備考欄</th>
                 </tr>
                 <tr th:each="i : ${#numbers.sequence(1, count)}">
                     <td class="center">[[${i}]]</td>
-                    <td colspan="4"><input type="text" name="start[]" class="time"> ～ <input type="text" name="end[]" class="time"></td>
-                    <td colspan="6"><input type="text" name="detail[]"></td>
+                    <td colspan="3"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+                    <td colspan="7"><input type="text" name="detail[]"></td>
                     <td colspan="2"><input type="text" name="progress[]"></td>
                     <td colspan="2"><input type="text" name="remarks[]"></td>
                     <td th:onclick="|deleteRow(__${i}__)|" class="delete">削除</td>
@@ -169,6 +179,7 @@ const deleteRow = (i) => {
 const rename = () => {
     for (let i = 1; i < main.rows.length - 1; i++) {
         main.rows[i].children[0].innerHTML = i;
+        main.rows[i].children[5].setAttribute('onclick', `deleteRow(${i})`);
     }
 }
 </script>

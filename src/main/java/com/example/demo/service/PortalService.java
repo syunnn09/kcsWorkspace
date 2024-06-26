@@ -26,4 +26,6 @@ public interface PortalService {
 	public void saveWorkDetails(List<WorkDetail> details);
 
 	public List<Work> getWorks(String userid);
+
+	public Work findWork(int workId);
 }

@@ -83,4 +83,9 @@ public class PortalServiceImpl implements PortalService {
 		works.forEach(work::add);
 		return work;
 	}
+
+	@Override
+	public Work findWork(int workId) {
+		return workRepository.findById(workId).get();
+	}
 }

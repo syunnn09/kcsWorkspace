@@ -30,7 +30,7 @@ public class Bbs {
 	private boolean isNew;
 
 	public String postTime() {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日(E) hh:mm:ss");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日(E) HH:mm:ss");
 		return post_at.format(dateTimeFormatter);
 	}
 

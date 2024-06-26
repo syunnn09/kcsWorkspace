@@ -15,8 +15,31 @@ table {
     <center>
         <h1>報告書一覧</h1>
 
-        <div>
+        <div class="create">
             <a th:each="report : ${reports}" th:href="@{/portal/report/{report}(report=${report.type})}" th:text="${report.name}"></a>
+        </div>
+
+        <div class="reports">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>実施日</th>
+                        <th>作業者</th>
+                        <th>連絡事項</th>
+                        <th>提出日時</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="work : ${works}">
+                        <th th:text="${work.day}"></th>
+                        <th th:text="${work.userid}"></th>
+                        <th th:text="${work.notices}"></th>
+                        <th th:text="${work.upload}"></th>
+                        <th><a th:href="@{/portal/report/work/{id}(id=${work.id})}">閲覧</a></th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </center>
 </body>

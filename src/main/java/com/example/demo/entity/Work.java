@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -21,7 +23,25 @@ public class Work {
 	private String userid;
 	private String notices;
 	private String day;
+	private LocalDateTime updateDate;
 
 	@Transient
 	private List<WorkDetail> workDetails;
+
+	public String upload() {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return updateDate.format(dateTimeFormatter);
+	}
+
+	public String year() {
+		return String.valueOf(updateDate.getYear());
+	}
+
+	public String month() {
+		return String.valueOf(updateDate.getMonthValue());
+	}
+
+	public String date() {
+		return String.valueOf(updateDate.getDayOfMonth());
+	}
 }
