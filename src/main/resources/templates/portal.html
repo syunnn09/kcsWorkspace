@@ -51,8 +51,8 @@ p {
                 <a th:href="@{/portal(ad=${nextAd})}">>></a>
             </div>
     
-            <div class="d-flex justify-content-center border-end border-danger">
-                <div th:each="p : ${personal}" class="border-start border-top border-bottom border-danger schedule-item">
+            <div class="d-flex justify-content-center border-top border-bottom border-end border-danger">
+                <div th:each="p : ${personal}" class="border-start border-danger schedule-item">
                     <div th:each="map : ${p}">
                         <div class="h position-relative">
                             <div class="border-bottom border-danger p-3">

@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +10,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.consts.Const.Report;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.form.BbsForm;
 import com.example.demo.form.ScheduleForm;
+import com.example.demo.form.WorkForm;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
@@ -41,13 +46,20 @@ public class PortalController {
 	@Autowired
 	PortalService portalService;
 
+	@Autowired
+	HttpSession session;
+
 	private String redirectLogin() {
 		return "redirect:/login";
 	}
 
+	private User getUser() {
+		return (User) session.getAttribute("user");
+	}
+
 	@GetMapping(value={"", "/"})
-	public String portal(@PathParam("ad") String ad, Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
+	public String portal(@PathParam("ad") String ad, Model model) {
+		User user = getUser();
 		if (user == null) {
 			return redirectLogin();
 		}
@@ -72,10 +84,9 @@ public class PortalController {
 	public String regist(
 		@PathParam("day") String day,
 		@PathParam("status") String status,
-		@ModelAttribute ScheduleForm schedule,
-		HttpSession session
+		@ModelAttribute ScheduleForm schedule
 	) {
-		User user = (User) session.getAttribute("user");
+		User user = getUser();
 		if (user == null) {
 			return redirectLogin();
 		}
@@ -91,8 +102,8 @@ public class PortalController {
 	}
 
 	@PostMapping("regist")
-	public String doRegist(ScheduleForm schedule, HttpSession session) {
-		User user = (User) session.getAttribute("user");
+	public String doRegist(ScheduleForm schedule) {
+		User user = getUser();
 		if (user == null) {
 			return redirectLogin();
 		}
@@ -111,8 +122,8 @@ public class PortalController {
 	}
 
 	@GetMapping("bbs/thread")
-	public String bbsDetail(@ModelAttribute BbsForm form, @PathParam("id") int id, Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
+	public String bbsDetail(@ModelAttribute BbsForm form, @PathParam("id") int id, Model model) {
+		User user = getUser();
 		if (user == null) {
 			return redirectLogin();
 		}
@@ -136,7 +147,7 @@ public class PortalController {
 		@PathParam("text") String text,
 		HttpSession session
 	) {
-		User user = (User) session.getAttribute("user");
+		User user = getUser();
 		if (user == null) {
 			return redirectLogin();
 		}
@@ -155,5 +166,33 @@ public class PortalController {
 	public String create(@PathParam("title") String title) {
 		portalService.saveThread(title);
 		return "redirect:bbs";
+	}
+
+	@GetMapping("report")
+	public String report(Model model) {
+		model.addAttribute("reports", Report.values());
+		return "report/index";
+	}
+
+	@GetMapping("report/{type}")
+	public String showReport(@ModelAttribute WorkForm form, @PathVariable String type, Model model) {
+		User user = getUser();
+		if (user == null) {
+			return redirectLogin();
+		}
+		if (!Report.contains(type)) {
+			return "redirect:/portal/report";
+		}
+		LocalDate today = LocalDate.now();
+		model.addAttribute("count", 3);
+		model.addAttribute("today", today);
+		model.addAttribute("user", user);
+		return "report/" + type;
+	}
+
+	@PostMapping("report/{type}")
+	public String saveReport(@PathVariable String type, @PathParam("detail") String[] detail) {
+		System.out.println(Arrays.toString(detail));
+		return "redirect:/portal/report";
 	}
 }

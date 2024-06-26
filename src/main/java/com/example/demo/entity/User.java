@@ -24,4 +24,8 @@ public class User {
 
 	@Column(value="departmentName")
 	public String departmentName;
+
+	public String name() {
+		return this.username;
+	}
 }

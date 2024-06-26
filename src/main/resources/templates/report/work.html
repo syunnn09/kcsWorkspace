@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>作業報告書</title>
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .main {
+        min-width: 800px;
+        max-width: 1000px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+        border: 1px solid black;
+        table-layout: fixed;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid black;
+    }
+    th {
+        text-align: center;
+    }
+    p {
+        margin-bottom: 0;
+    }
+    #add {
+        text-align: center;
+        cursor: pointer;
+    }
+    .center {
+        text-align: center;
+    }
+    .right {
+        text-align: right;
+    }
+    .impDate > input {
+        width: 20%;
+        border: none;
+        border-bottom: 1px solid #000;
+        outline: none;
+        text-align: right;
+    }
+    input {
+        width: 100%;
+        border: none;
+        outline: none;
+    }
+    .delete {
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        color: #f00;
+    }
+    .time {
+        width: 40%;
+        text-align: center;
+    }
+    .notices {
+        height: 130px;
+        width: 100%;
+        border: none;
+        outline: none;
+        overflow: auto;
+        resize: none;
+    }
+</style>
+<body>
+    <div class="main">
+        <h1 class="text-center m-3">作業報告書</h1>
+        <p class="text-end">報告日： [[${today.year}]] 年 [[${today.monthValue}]] 月 [[${today.dayOfMonth}]] 日</p>
+        <form method="post">
+            <table>
+                <tr>
+                    <th>所属・部署</th>
+                    <th>氏名</th>
+                    <th>作業実施日</th>
+                </tr>
+                <tr>
+                    <td>[[${user.departmentName}]]</td>
+                    <td>[[${user.name}]]</td>
+                    <td class="impDate right">
+                        <input type="text" name="year" th:value="${today.year}">年
+                        <input type="text" name="month" th:value="${today.monthValue}">月
+                        <input type="text" name="day" th:value="${today.dayOfMonth}">日
+                    </td>
+                </tr>
+            </table>
+            <table id="main">
+                <tr>
+                    <th></th>
+                    <th colspan="4">作業時間</th>
+                    <th colspan="6">作業内容</th>
+                    <th colspan="2">進捗</th>
+                    <th colspan="2">備考欄</th>
+                </tr>
+                <tr th:each="i : ${#numbers.sequence(1, count)}">
+                    <td class="center">[[${i}]]</td>
+                    <td colspan="4"><input type="text" name="start[]" class="time"> ～ <input type="text" name="end[]" class="time"></td>
+                    <td colspan="6"><input type="text" name="detail[]"></td>
+                    <td colspan="2"><input type="text" name="progress[]"></td>
+                    <td colspan="2"><input type="text" name="remarks[]"></td>
+                    <td th:onclick="|deleteRow(__${i}__)|" class="delete">削除</td>
+                </tr>
+                <tr>
+                    <td colspan="16" id="add">+</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>
+                        <p>特記事項・連絡事項</p>
+                    </th>
+                </tr>
+                <tr>
+                    <td><textarea name="notices" class="notices"></textarea></td>
+                </tr>
+            </table>
+            <div class="d-flex justify-content-end">
+                <table style="width: 30%;">
+                    <tr>
+                        <th>部長</th>
+                        <th>所属長</th>
+                        <th>本人印</th>
+                    </tr>
+                    <tr>
+                        <td class="center" style="height: 50px;"></td>
+                        <td class="center"></td>
+                        <td class="center"><img th:src="@{/images/ok.png}"></td>
+                    </tr>
+                </table>
+            </div>
+            <input type="button" onclick="submit()" value="送信">
+        </form>
+    </div>
+</body>
+<script>
+const add = document.getElementById('add');
+const main = document.getElementById('main');
+
+add.addEventListener('click', function() {
+    const row = main.insertRow(main.rows.length-1);
+    const count = main.rows.length - 2;
+    row.innerHTML = `
+        <td class="center">${count}</td>
+        <td colspan="4"><input type="text" name="start[]" class="time"> ～ <input type="text" name="end[]" class="time"></td>
+        <td colspan="6"><input type="text" name="detail[]"></td>
+        <td colspan="2"><input type="text" name="progress[]"></td>
+        <td colspan="2"><input type="text" name="remarks[]"></td>
+        <td onclick="deleteRow(${count})" class="delete">削除</td>`;
+});
+
+const deleteRow = (i) => {
+    const target = Number(i);
+    main.deleteRow(target);
+    rename();
+}
+
+const rename = () => {
+    for (let i = 1; i < main.rows.length - 1; i++) {
+        main.rows[i].children[0].innerHTML = i;
+    }
+}
+</script>
+</html>
