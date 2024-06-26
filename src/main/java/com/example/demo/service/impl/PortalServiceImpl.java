@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
+import com.example.demo.form.WorkDetail;
 import com.example.demo.repository.BbsRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.WorkDetailRepository;
+import com.example.demo.repository.WorkRepository;
 import com.example.demo.service.PortalService;
 
 @Service
@@ -26,6 +30,12 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	BbsRepository bbsRepository;
+
+	@Autowired
+	WorkRepository workRepository;
+
+	@Autowired
+	WorkDetailRepository workDetailRepository;
 
 	@Override
 	public List<Thread> getAllThreads() {
@@ -53,5 +63,24 @@ public class PortalServiceImpl implements PortalService {
 	@Override
 	public void saveBbs(BbsForm bbs) {
 		bbsRepository.save(bbs);
+	}
+
+	@Override
+	public int saveWorkReport(Work work) {
+		workRepository.save(work);
+		return work.getId();
+	}
+
+	@Override
+	public void saveWorkDetails(List<WorkDetail> details) {
+		workDetailRepository.saveAll(details);
+	}
+
+	@Override
+	public List<Work> getWorks(String userid) {
+		Iterable<Work> works = workRepository.getWorks(userid);
+		List<Work> work = new ArrayList<>();
+		works.forEach(work::add);
+		return work;
 	}
 }

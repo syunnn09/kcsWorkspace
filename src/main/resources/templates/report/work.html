@@ -78,7 +78,8 @@
     <div class="main">
         <h1 class="text-center m-3">作業報告書</h1>
         <p class="text-end">報告日： [[${today.year}]] 年 [[${today.monthValue}]] 月 [[${today.dayOfMonth}]] 日</p>
-        <form method="post">
+        <form method="post" th:object="${workForm}">
+            <input type="hidden" name="userid" th:value="${user.userid}">
             <table>
                 <tr>
                     <th>所属・部署</th>
@@ -89,9 +90,9 @@
                     <td>[[${user.departmentName}]]</td>
                     <td>[[${user.name}]]</td>
                     <td class="impDate right">
-                        <input type="text" name="year" th:value="${today.year}">年
-                        <input type="text" name="month" th:value="${today.monthValue}">月
-                        <input type="text" name="day" th:value="${today.dayOfMonth}">日
+                        <input type="text" th:field="*{year}">年
+                        <input type="text" th:field="*{month}">月
+                        <input type="text" th:field="*{date}">日
                     </td>
                 </tr>
             </table>

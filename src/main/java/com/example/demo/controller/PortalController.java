@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,10 @@ import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
 import com.example.demo.form.ScheduleForm;
+import com.example.demo.form.WorkDetail;
 import com.example.demo.form.WorkForm;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
@@ -171,6 +172,8 @@ public class PortalController {
 	@GetMapping("report")
 	public String report(Model model) {
 		model.addAttribute("reports", Report.values());
+		model.addAttribute("works", portalService.getWorks(getUser().getUserid()));
+		System.out.println(model.getAttribute("works"));
 		return "report/index";
 	}
 
@@ -187,12 +190,29 @@ public class PortalController {
 		model.addAttribute("count", 3);
 		model.addAttribute("today", today);
 		model.addAttribute("user", user);
+		form.setYear(today.getYear());
+		form.setMonth(today.getMonthValue());
+		form.setDate(today.getDayOfMonth());
 		return "report/" + type;
 	}
 
 	@PostMapping("report/{type}")
-	public String saveReport(@PathVariable String type, @PathParam("detail") String[] detail) {
-		System.out.println(Arrays.toString(detail));
+	public String saveReport(@PathVariable String type, WorkForm form) {
+		System.out.println(form);
+
+		Work work = new Work();
+		work.setDay(form.dayStr());
+		work.setUserid(form.getUserid());
+		work.setNotices(form.getNotices());
+		int id = portalService.saveWorkReport(work);
+
+		List<WorkDetail> works = new ArrayList<>();
+		int count = form.getStart().length;
+		for (int i = 0; i < count; i++) {
+			works.add(new WorkDetail(form, i, id));
+		}
+		portalService.saveWorkDetails(works);
+
 		return "redirect:/portal/report";
 	}
 }

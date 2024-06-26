@@ -1,5 +1,8 @@
 package com.example.demo.form;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +21,14 @@ public class WorkForm {
 	private String[] progress;
 	private String[] remarks;
 	private String notices;
+
+	public LocalDate day() {
+		return LocalDate.of(year, month, date);
+	}
+
+	public String dayStr() {
+		LocalDate date = day();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return date.format(formatter);
+	}
 }

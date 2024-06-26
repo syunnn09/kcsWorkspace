@@ -5,7 +5,9 @@ import java.util.List;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
+import com.example.demo.form.WorkDetail;
 
 public interface PortalService {
 
@@ -18,4 +20,10 @@ public interface PortalService {
 	public User getUser(Bbs bbs);
 
 	public void saveBbs(BbsForm bbs);
+
+	public int saveWorkReport(Work work);
+
+	public void saveWorkDetails(List<WorkDetail> details);
+
+	public List<Work> getWorks(String userid);
 }
