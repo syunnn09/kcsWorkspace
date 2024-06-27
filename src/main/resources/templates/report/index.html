@@ -10,6 +10,14 @@
 table {
     border-collapse: collapse;
 }
+.reports {
+    max-width: 1000px;
+}
+.notices {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 </style>
 <body>
     <center>
@@ -23,18 +31,18 @@ table {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>実施日</th>
-                        <th>作業者</th>
-                        <th>連絡事項</th>
-                        <th>提出日時</th>
-                        <th></th>
+                        <th style="width: 13%">実施日</th>
+                        <th style="width: 20%">作業者</th>
+                        <th style="width: 42%">連絡事項</th>
+                        <th style="width: 20%">報告日時</th>
+                        <th style="width: 5%"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="work : ${works}">
                         <th th:text="${work.day}"></th>
-                        <th th:text="${work.userid}"></th>
-                        <th th:text="${work.notices}"></th>
+                        <th th:text="${work.username}"></th>
+                        <th th:text="${work.notices}" class="notices"></th>
                         <th th:text="${work.upload}"></th>
                         <th><a th:href="@{/portal/report/work/{id}(id=${work.id})}">閲覧</a></th>
                     </tr>

@@ -28,6 +28,9 @@ public class Work {
 	@Transient
 	private List<WorkDetail> workDetails;
 
+	@Transient
+	private String username;
+
 	public String upload() {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		return updateDate.format(dateTimeFormatter);
@@ -43,5 +46,9 @@ public class Work {
 
 	public String date() {
 		return String.valueOf(updateDate.getDayOfMonth());
+	}
+
+	public boolean isNew() {
+		return false;
 	}
 }

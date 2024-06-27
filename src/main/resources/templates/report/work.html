@@ -50,6 +50,10 @@
         outline: none;
         text-align: right;
     }
+    .impDate > input:disabled {
+        color: #000;
+        background-color: #fff;
+    }
     input {
         width: 100%;
         border: none;
@@ -79,7 +83,7 @@
         .main {
             max-width: 700px;
         }
-        input[type=button], #add, .delete {
+        .print {
             display: none;
         }
     }
@@ -88,8 +92,9 @@
     <div class="main">
         <h1 class="text-center m-3">作業報告書</h1>
         <p class="text-end">報告日： [[${today.year}]] 年 [[${today.monthValue}]] 月 [[${today.dayOfMonth}]] 日</p>
-        <form method="post" th:object="${workForm}">
+        <form method="post" th:object="${workForm}" name="form">
             <input type="hidden" name="userid" th:value="${user.userid}">
+            <input type="hidden" name="count" th:value="${count}">
             <table>
                 <tr>
                     <th>所属・部署</th>
@@ -99,10 +104,15 @@
                 <tr>
                     <td class="center">[[${user.departmentName}]]</td>
                     <td class="center">[[${user.name}]]</td>
-                    <td class="impDate right">
+                    <td th:if="${workForm.isNew}" class="impDate right">
                         <input type="text" th:field="*{year}">年
                         <input type="text" th:field="*{month}">月
                         <input type="text" th:field="*{date}">日
+                    </td>
+                    <td th:unless="${workForm.isNew}" class="impDate right">
+                        <input type="text" th:value="${workForm.year}" disabled>年
+                        <input type="text" th:value="${workForm.month}" disabled>月
+                        <input type="text" th:value="${workForm.date}" disabled>日
                     </td>
                 </tr>
             </table>
@@ -114,26 +124,40 @@
                     <th colspan="2">進捗</th>
                     <th colspan="2">備考欄</th>
                 </tr>
-                <tr th:each="i : ${#numbers.sequence(1, count)}">
-                    <td class="center">[[${i}]]</td>
-                    <td colspan="3"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
-                    <td colspan="7"><input type="text" name="detail[]"></td>
-                    <td colspan="2"><input type="text" name="progress[]"></td>
-                    <td colspan="2"><input type="text" name="remarks[]"></td>
-                    <td th:onclick="|deleteRow(__${i}__)|" class="delete">削除</td>
-                </tr>
-                <tr>
-                    <td colspan="16" id="add">+</td>
+                <div th:if="${workForm.isNew}">
+                    <tr th:each="i : ${#numbers.sequence(1, count)}">
+                        <td class="center">[[${i}]]</td>
+                        <td colspan="3"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+                        <td colspan="7"><input type="text" name="detail[]"></td>
+                        <td colspan="2"><input type="text" name="progress[]"></td>
+                        <td colspan="2"><input type="text" name="remarks[]"></td>
+                        <td th:onclick="|deleteRow(__${i}__)|" class="delete print">削除</td>
+                    </tr>
+                </div>
+                <div th:unless="${workForm.isNew}">
+                    <tr th:each="detail : ${workForm.workDetails}">
+                        <td class="center">[[${detail.num + 1}]]</td>
+                        <td colspan="3">[[${detail.start}]] ~ [[${detail.end}]]</td>
+                        <td colspan="7">[[${detail.detail}]]</td>
+                        <td colspan="2">[[${detail.progress}]]</td>
+                        <td colspan="2">[[${detail.remarks}]]</td>
+                    </tr>
+                </div>
+                <tr th:if="${workForm.isNew}">
+                    <td colspan="16" id="add" class="print">+</td>
                 </tr>
             </table>
             <table>
                 <tr>
-                    <th>
-                        <p>特記事項・連絡事項</p>
-                    </th>
+                    <th><p>特記事項・連絡事項</p></th>
                 </tr>
                 <tr>
-                    <td><textarea name="notices" class="notices"></textarea></td>
+                    <div th:if="${workForm.isNew}">
+                        <td><textarea name="notices" class="notices"></textarea></td>
+                    </div>
+                    <div th:unless="${workForm.isNew}">
+                        <td><p class="notices" th:text="${workForm.notices}"></p></td>
+                    </div>
                 </tr>
             </table>
             <div class="d-flex justify-content-end">
@@ -150,7 +174,13 @@
                     </tr>
                 </table>
             </div>
-            <input type="button" onclick="submit()" value="送信">
+            <div th:if="${workForm.isNew}">
+                <input type="button" class="print" onclick="submit()" value="送信">
+            </div>
+            <div th:unless="${workForm.isNew}">
+                <a th:href="@{/portal/report}" class="print">一覧へ</a>
+                <a href="javascript:void(0)" onclick="print()" class="print">保存</a>
+            </div>
         </form>
     </div>
 </body>
@@ -158,21 +188,25 @@
 const add = document.getElementById('add');
 const main = document.getElementById('main');
 
-add.addEventListener('click', function() {
-    const row = main.insertRow(main.rows.length-1);
-    const count = main.rows.length - 2;
-    row.innerHTML = `
-        <td class="center">${count}</td>
-        <td colspan="4"><input type="text" name="start[]" class="time"> ～ <input type="text" name="end[]" class="time"></td>
-        <td colspan="6"><input type="text" name="detail[]"></td>
-        <td colspan="2"><input type="text" name="progress[]"></td>
-        <td colspan="2"><input type="text" name="remarks[]"></td>
-        <td onclick="deleteRow(${count})" class="delete">削除</td>`;
-});
+if (add !== null) {
+    add.addEventListener('click', function() {
+        const row = main.insertRow(main.rows.length-1);
+        const count = main.rows.length - 2;
+        document.form.count.value = count;
+        row.innerHTML = `
+            <td class="center">${count}</td>
+            <td colspan="4"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+            <td colspan="6"><input type="text" name="detail[]"></td>
+            <td colspan="2"><input type="text" name="progress[]"></td>
+            <td colspan="2"><input type="text" name="remarks[]"></td>
+            <td onclick="deleteRow(${count})" class="delete">削除</td>`;
+    });
+}
 
 const deleteRow = (i) => {
     const target = Number(i);
     main.deleteRow(target);
+    document.form.count.value -= 1;
     rename();
 }
 
@@ -182,5 +216,6 @@ const rename = () => {
         main.rows[i].children[5].setAttribute('onclick', `deleteRow(${i})`);
     }
 }
+
 </script>
 </html>

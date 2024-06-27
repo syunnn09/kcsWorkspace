@@ -80,12 +80,20 @@ public class PortalServiceImpl implements PortalService {
 	public List<Work> getWorks(String userid) {
 		Iterable<Work> works = workRepository.getWorks(userid);
 		List<Work> work = new ArrayList<>();
-		works.forEach(work::add);
+		works.forEach(w -> {
+			w.setUsername("今村");
+			work.add(w);
+		});
 		return work;
 	}
 
 	@Override
 	public Work findWork(int workId) {
 		return workRepository.findById(workId).get();
+	}
+
+	@Override
+	public List<WorkDetail> getWorkDetail(int workid) {
+		return workDetailRepository.getWorkDetail(workid);
 	}
 }

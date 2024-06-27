@@ -48,16 +48,18 @@ CREATE TABLE IF NOT EXISTS WORK(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	userid VARCHAR(255) REFERENCES users(userid),
 	DAY VARCHAR(255) NOT NULL,
-	notices TEXT
+	notices TEXT,
+	update_date DATETIME
 );
 
 -- DROP TABLE work_detail;
 CREATE TABLE IF NOT EXISTS work_detail(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	workid INT NOT NULL,
+	workid INT NOT NULL REFERENCES work(id),
 	num INT NOT NULL,
 	START VARCHAR(9),
 	END VARCHAR(9),
+	detail TEXT,
 	progress VARCHAR(50),
 	remarks TEXT
 );

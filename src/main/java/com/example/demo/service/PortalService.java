@@ -28,4 +28,6 @@ public interface PortalService {
 	public List<Work> getWorks(String userid);
 
 	public Work findWork(int workId);
+
+	public List<WorkDetail> getWorkDetail(int workid);
 }

@@ -41,6 +41,10 @@ public class ReportController {
 		return (User) session.getAttribute("user");
 	}
 
+	private LocalDate now() {
+		return LocalDate.now();
+	}
+
 	@GetMapping(value={"", "/"})
 	public String report(Model model) {
 		User user = getUser();
@@ -52,6 +56,12 @@ public class ReportController {
 		return "report/index";
 	}
 
+	private void addAttribute(Model model) {
+		model.addAttribute("count", 3);
+		model.addAttribute("today", now());
+		model.addAttribute("user", getUser());
+	}
+
 	@GetMapping("/{type}")
 	public String showReport(@ModelAttribute WorkForm form, @PathVariable String type, Model model) {
 		User user = getUser();
@@ -61,10 +71,8 @@ public class ReportController {
 		if (!Report.contains(type)) {
 			return "redirect:/portal/report";
 		}
-		LocalDate today = LocalDate.now();
-		model.addAttribute("count", 3);
-		model.addAttribute("today", today);
-		model.addAttribute("user", user);
+		LocalDate today = now();
+		this.addAttribute(model);
 		form.setYear(today.getYear());
 		form.setMonth(today.getMonthValue());
 		form.setDate(today.getDayOfMonth());
@@ -73,9 +81,16 @@ public class ReportController {
 
 	@GetMapping("/{type}/{id}")
 	public String show(@PathVariable String id, Model model) {
+		User user = getUser();
+		if (user == null) {
+			return redirectLogin();
+		}
 		int workId = Integer.parseInt(id);
-		Work work = portalService.findWork(workId);
-		model.addAttribute("work", work);
+		Work work = portalService.findWork(workId);;
+		work.setWorkDetails(portalService.getWorkDetail(workId));
+		model.addAttribute("workForm", work);
+		this.addAttribute(model);
+		System.out.println(work);
 		return "report/work";
 	}
 
@@ -91,7 +106,7 @@ public class ReportController {
 		int id = portalService.saveWorkReport(work);
 
 		List<WorkDetail> works = new ArrayList<>();
-		int count = form.getStart().length;
+		int count = form.getCount();
 		for (int i = 0; i < count; i++) {
 			works.add(new WorkDetail(form, i, id));
 		}
