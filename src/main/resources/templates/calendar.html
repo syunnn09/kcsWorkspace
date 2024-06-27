@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<style>
+    .calendar {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .calendar th, .calendar td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+</style>
+<body>
+    <h2>Calendar with Schedule</h2>
+    
+    <table class="calendar">
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="week : ${datesOfMonth}">
+                <td th:each="date : ${week}" th:text="${date.dayOfMonth}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Schedule for the Month</h3>
+    <ul>
+        <li th:each="schedule : ${scheduleList}" th:text="${schedule}"></li>
+    </ul>
+</body>
+</html>

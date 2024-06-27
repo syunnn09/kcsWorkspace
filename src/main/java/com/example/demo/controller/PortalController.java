@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.CommonUtils;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
@@ -162,4 +165,31 @@ public class PortalController {
 		portalService.saveThread(title);
 		return "redirect:bbs";
 	}
+
+	@GetMapping("facility")
+    public String showCalendar(Model model) {
+		YearMonth currentYearMonth = YearMonth.from(LocalDate.now());
+
+		LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
+		System.out.println(firstDayOfMonth.getDayOfWeek());
+		System.out.println(CommonUtils.getStartDiff(firstDayOfMonth.getDayOfWeek()));
+		LocalDate lastDayOfMonth = currentYearMonth.atEndOfMonth();
+
+		List<LocalDate> datesOfMonth = new ArrayList<>();
+		List<String> scheduleList = new ArrayList<>();
+
+		scheduleList.add("Meeting with Client A");
+		scheduleList.add("Team Lunch");
+		scheduleList.add("Conference Call");
+
+		for (LocalDate date = firstDayOfMonth; !date.isAfter(lastDayOfMonth); date = date.plusDays(1)) {
+			datesOfMonth.add(date);
+		}
+
+		model.addAttribute("datesOfMonth", datesOfMonth);
+		model.addAttribute("scheduleList", scheduleList);
+
+		return "calendar";
+    }
+
 }

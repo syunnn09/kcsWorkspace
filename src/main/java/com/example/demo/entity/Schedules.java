@@ -15,8 +15,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Schedules {
 
-	HashMap<String, ScheduleRow> scheduleMap;
-	String[] days = new String[7];
+	HashMap<LocalDate, ScheduleRow> scheduleMap;
+	List<LocalDate> days = new ArrayList<>();
 
 	public Schedules(List<Schedule> schedule) {
 		this(schedule, 0);
@@ -24,17 +24,17 @@ public class Schedules {
 
 	public Schedules(List<Schedule> schedule, int ad) {
 		LocalDate start = CommonUtils.getStartDate(ad);
-		scheduleMap = new HashMap<String, ScheduleRow>();
+		scheduleMap = new HashMap<LocalDate, ScheduleRow>();
 		for (int i = 0; i < 7; i++) {
-			String day = start.plusDays(i).toString();
-			days[i] = day;
+			LocalDate day = start.plusDays(i);
+			days.add(day);
 			scheduleMap.put(day, new ScheduleRow());
 		}
 		schedule.forEach(s -> this.add(s));
 	}
 
 	public ScheduleRow find(LocalDate date) {
-		return scheduleMap.get(date.toString());
+		return scheduleMap.get(date);
 	}
 
 	public void add(Schedule schedule) {
@@ -48,10 +48,10 @@ public class Schedules {
 		}
 	}
 
-	public List<Map<String, ScheduleRow>> getSchedules() {
-		List<Map<String, ScheduleRow>> schedules = new ArrayList<>();
-		for (String day : days) {
-			Map<String, ScheduleRow> map = new HashMap<>();
+	public List<Map<LocalDate, ScheduleRow>> getSchedules() {
+		List<Map<LocalDate, ScheduleRow>> schedules = new ArrayList<>();
+		for (LocalDate day : days) {
+			Map<LocalDate, ScheduleRow> map = new HashMap<>();
 			map.put(day, this.scheduleMap.get(day));
 			schedules.add(map);
 		}

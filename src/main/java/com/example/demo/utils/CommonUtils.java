@@ -39,4 +39,16 @@ public class CommonUtils {
 		return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
 
+	public static int getStartDiff(DayOfWeek dayOfWeek) {
+		return switch (dayOfWeek) {
+			case SUNDAY -> 0;
+			case MONDAY -> 1;
+			case TUESDAY -> 2;
+			case WEDNESDAY -> 3;
+			case THURSDAY -> 4;
+			case FRIDAY -> 5;
+			case SATURDAY -> 6;
+			default -> 0;
+		};
+	}
 }
