@@ -34,7 +34,7 @@
         </thead>
         <tbody>
             <tr th:each="week : ${datesOfMonth}">
-                <td th:each="date : ${week}" th:text="${date.dayOfMonth}"></td>
+                <td th:each="date : ${week}" th:text="${date}"></td>
             </tr>
         </tbody>
     </table>

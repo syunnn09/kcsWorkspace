@@ -171,19 +171,22 @@ public class PortalController {
 		YearMonth currentYearMonth = YearMonth.from(LocalDate.now());
 
 		LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
-		System.out.println(firstDayOfMonth.getDayOfWeek());
-		System.out.println(CommonUtils.getStartDiff(firstDayOfMonth.getDayOfWeek()));
+		System.out.println(firstDayOfMonth.getDayOfWeek());;
 		LocalDate lastDayOfMonth = currentYearMonth.atEndOfMonth();
 
-		List<LocalDate> datesOfMonth = new ArrayList<>();
+		List<Integer> datesOfMonth = new ArrayList<>();
 		List<String> scheduleList = new ArrayList<>();
 
 		scheduleList.add("Meeting with Client A");
 		scheduleList.add("Team Lunch");
 		scheduleList.add("Conference Call");
 
-		for (LocalDate date = firstDayOfMonth; !date.isAfter(lastDayOfMonth); date = date.plusDays(1)) {
-			datesOfMonth.add(date);
+		int diff = CommonUtils.getStartDiff(firstDayOfMonth.getDayOfWeek());
+		for (int i = 0; i < diff; i++) {
+			datesOfMonth.add(0);
+		}
+		for (int i = 1; i <= lastDayOfMonth.getDayOfMonth(); i++) {
+			datesOfMonth.add(i);
 		}
 
 		model.addAttribute("datesOfMonth", datesOfMonth);
