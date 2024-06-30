@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.Bbs;
+import com.example.demo.entity.Calendar;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
@@ -23,7 +24,6 @@ import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
 import com.example.demo.service.UserService;
-import com.example.demo.utils.CommonUtils;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
@@ -74,6 +74,7 @@ public class PortalController {
 
 		model.addAttribute("prevAd", next+1);
 		model.addAttribute("nextAd", next-1);
+		model.addAttribute("showThisWeek", next != 0);
 
 		return "portal";
 	}
@@ -90,11 +91,8 @@ public class PortalController {
 		}
 		schedule.setDate(day);
 		if (status != null) {
-			if (status.equals("personal")) {
-				schedule.setPersonal(true);
-			} else if (status.equals("team")) {
-				schedule.setTeam(true);
-			}
+			schedule.setPersonal(status.equals("personal"));
+			schedule.setTeam(status.equals("team"));
 		}
 		return "regist";
 	}
@@ -168,31 +166,17 @@ public class PortalController {
 
 	@GetMapping("facility")
     public String showCalendar(Model model) {
-		YearMonth currentYearMonth = YearMonth.from(LocalDate.now());
-
-		LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
-		System.out.println(firstDayOfMonth.getDayOfWeek());;
-		LocalDate lastDayOfMonth = currentYearMonth.atEndOfMonth();
-
-		List<Integer> datesOfMonth = new ArrayList<>();
-		List<String> scheduleList = new ArrayList<>();
-
-		scheduleList.add("Meeting with Client A");
-		scheduleList.add("Team Lunch");
-		scheduleList.add("Conference Call");
-
-		int diff = CommonUtils.getStartDiff(firstDayOfMonth.getDayOfWeek());
-		for (int i = 0; i < diff; i++) {
-			datesOfMonth.add(0);
-		}
-		for (int i = 1; i <= lastDayOfMonth.getDayOfMonth(); i++) {
-			datesOfMonth.add(i);
-		}
-
-		model.addAttribute("datesOfMonth", datesOfMonth);
-		model.addAttribute("scheduleList", scheduleList);
-
+		Calendar calendar = new Calendar();
+		model.addAttribute("calendar", calendar);
 		return "calendar";
     }
 
+	@GetMapping("facility/regist")
+	public String registFacility(@PathParam("date") String date, Model model) {
+		LocalDate d = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
+		date = d.format(DateTimeFormatter.ofPattern("yyyy年M月d日"));
+		model.addAttribute("facilities", portalService.getFacilities());
+		model.addAttribute("date", date);
+		return "regist_facility";
+	}
 }

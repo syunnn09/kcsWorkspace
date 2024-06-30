@@ -43,44 +43,24 @@
 
             <p>施設・設備予約状況画面</p>
 
-            <div class="mb-3">
-                <a th:href="@{/portal/facility/list}">予約一覧へ</a>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <p style="opacity: 0;"><<5月</p>
-                <p>2024年6月</p>
-                <a th:href="@{/portal/facility?date=202407}">7月>></a>
+            <div class="mb-2">
+                <p>[[${date}]]</p>
             </div>
 
             <table class="calendar">
                 <thead>
                     <tr>
-                        <th class="text-danger">日</th>
-                        <th>月</th>
-                        <th>火</th>
-                        <th>水</th>
-                        <th>木</th>
-                        <th>金</th>
-                        <th class="blue">土</th>
+                        <th></th>
+                        <th th:each="facility : ${facilities}">[[${facility.name}]]</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="week : ${calendar.week}">
-                        <td th:each="date : ${week}" class="position-relative">
-                            <div th:if="${date != 0}">
-                                <p>[[${date}]]</p>
-                                <a th:href="@{/portal/facility/regist(date='2024-6-' + ${date})}" class="plus">+</a>
-                            </div>
-                        </td>
+                    <tr th:each="i : ${#numbers.sequence(0, 24)}">
+                        <td>[[${i}]]:00</td>
+                        <th th:each="_ : ${facilities}"></th>
                     </tr>
                 </tbody>
             </table>
-
-            <h3>Schedule</h3>
-            <ul>
-                <li th:each="schedule : ${calendar.scheduleList}" th:text="${schedule}"></li>
-            </ul>
 
             <a th:href="@{/portal}">ポータルへ</a>
         </div>

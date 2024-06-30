@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.entity.Bbs;
+import com.example.demo.entity.Facility;
+import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
@@ -30,4 +32,8 @@ public interface PortalService {
 	public Work findWork(int workId);
 
 	public List<WorkDetail> getWorkDetail(int workid);
+
+	List<Facility> getFacilities();
+
+	List<FacilityReserve> getReserves();
 }

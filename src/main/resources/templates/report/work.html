@@ -127,9 +127,9 @@
                 <div th:if="${workForm.isNew}">
                     <tr th:each="i : ${#numbers.sequence(1, count)}">
                         <td class="center">[[${i}]]</td>
-                        <td colspan="3"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+                        <td colspan="3" class="center"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
                         <td colspan="7"><input type="text" name="detail[]"></td>
-                        <td colspan="2"><input type="text" name="progress[]"></td>
+                        <td colspan="2" class="center"><input type="text" name="progress[]"></td>
                         <td colspan="2"><input type="text" name="remarks[]"></td>
                         <td th:onclick="|deleteRow(__${i}__)|" class="delete print">削除</td>
                     </tr>
@@ -137,9 +137,9 @@
                 <div th:unless="${workForm.isNew}">
                     <tr th:each="detail : ${workForm.workDetails}">
                         <td class="center">[[${detail.num + 1}]]</td>
-                        <td colspan="3">[[${detail.start}]] ~ [[${detail.end}]]</td>
+                        <td colspan="3" class="center">[[${detail.start}]] ~ [[${detail.end}]]</td>
                         <td colspan="7">[[${detail.detail}]]</td>
-                        <td colspan="2">[[${detail.progress}]]</td>
+                        <td colspan="2" class="center">[[${detail.progress}]]</td>
                         <td colspan="2">[[${detail.remarks}]]</td>
                     </tr>
                 </div>
@@ -195,9 +195,9 @@ if (add !== null) {
         document.form.count.value = count;
         row.innerHTML = `
             <td class="center">${count}</td>
-            <td colspan="4"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+            <td colspan="4" class="center"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
             <td colspan="6"><input type="text" name="detail[]"></td>
-            <td colspan="2"><input type="text" name="progress[]"></td>
+            <td colspan="2" class="center"><input type="text" name="progress[]"></td>
             <td colspan="2"><input type="text" name="remarks[]"></td>
             <td onclick="deleteRow(${count})" class="delete">削除</td>`;
     });

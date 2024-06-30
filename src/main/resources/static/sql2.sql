@@ -173,6 +173,29 @@ INSERT INTO `work_detail` (`id`, `workid`, `num`, `START`, `END`, `detail`, `pro
 	(2, 1, 1, '', '', NULL, '', ''),
 	(4, 11, 0, '9:00', '15:00', '作業', '完了', '');
 
+CREATE TABLE facility(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE facility_reserve(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	facility_id INT REFERENCES facility(id),
+	department_id INT REFERENCES department(ID),
+	purpose VARCHAR(255)
+);
+
+CREATE TABLE facility_reserve_detail(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	reserve_id INT REFERENCES facility_reserve(id),
+	`date` DATE NOT NULL,
+	`hour` INT NOT NULL
+	
+);
+
+INSERT INTO facility(`name`) VALUES('102'), ('104'), ('105'), ('106');
+INSERT INTO facility_reserve(facility_id, department_id, purpose) VALUES(1, 1, 'チーム会議'), (2, 1, 'チーム会議');
+INSERT INTO facility_reserve_detail(reserve_id, `date`, `HOUR`) VALUES(1, '2024/06/14', 15), (1, '2024/06/14', 16), (2, '2024/06/14', 16);
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

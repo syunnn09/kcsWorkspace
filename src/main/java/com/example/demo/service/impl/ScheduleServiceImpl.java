@@ -23,23 +23,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<Schedule> getPersonalSchedule(String userid, int ad) {
-		LocalDate start = CommonUtils.getStartDate();
-		LocalDate end = CommonUtils.getEndDate();
-		if (ad != 0) {
-			start = start.minusDays(ad*7);
-			end = end.minusDays(ad*7);
-		}
+		LocalDate start = CommonUtils.getStartDate(ad);
+		LocalDate end = CommonUtils.getEndDate(start);
 		return repo.getPersonalSchedule(userid, start.toString(), end.toString());
 	}
 
 	@Override
 	public List<Schedule> getTeamSchedule(int departmentId, int ad) {
-		LocalDate start = CommonUtils.getStartDate();
-		LocalDate end = CommonUtils.getEndDate();
-		if (ad != 0) {
-			start = start.minusDays(ad*7);
-			end = end.minusDays(ad*7);
-		}
+		LocalDate start = CommonUtils.getStartDate(ad);
+		LocalDate end = CommonUtils.getEndDate(start);
 		return repo.getTeamSchedule(departmentId, start.toString(), end.toString());
 	}
 

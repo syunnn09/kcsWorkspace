@@ -59,7 +59,9 @@ p {
             <p class="text-start">【個人スケジュール】</p>
             <div class="d-flex justify-content-between">
                 <a th:href="@{/portal(ad=${prevAd})}" class="prev adctl"><<</a>
-                <a th:href="@{/portal}" class="adctl">今週</a>
+                <div th:if="${showThisWeek}">
+                    <a th:href="@{/portal}" class="adctl">今週</a>
+                </div>
                 <a th:href="@{/portal(ad=${nextAd})}" class="next adctl">>></a>
             </div>
     
@@ -67,7 +69,7 @@ p {
                 <div th:each="p : ${personal}" class="border-start border-danger schedule-item">
                     <div th:each="map : ${p}">
                         <div class="h position-relative">
-                            <div class="border-bottom border-danger p-3" th:classappend="|${map.key.dayOfWeek.toString == 'SUNDAY' ? 'sunday' : ''} ${map.key.dayOfWeek.toString == 'SATURDAY' ? 'saturday' : ''}|">
+                            <div class="border-bottom border-danger p-2" th:classappend="|${map.key.dayOfWeek.toString == 'SUNDAY' ? 'sunday' : ''} ${map.key.dayOfWeek.toString == 'SATURDAY' ? 'saturday' : ''}|">
                                 [[${#temporals.format(map.key, 'yyyy/MM/dd(E)')}]]
                             </div>
                             <a th:href="@{/portal/regist?status=personal&day={day}(day=${map.key})}" class="plus position-absolute end-0 bottom-0">+</a>
@@ -87,7 +89,9 @@ p {
             <p class="text-start">【チームスケジュール】</p>
             <div class="d-flex justify-content-between">
                 <a th:href="@{/portal(ad=${prevAd})}" class="prev adctl"><<</a>
-                <a th:href="@{/portal}" class="adctl">今週</a>
+                <div th:if="${showThisWeek}">
+                    <a th:href="@{/portal}" class="adctl">今週</a>
+                </div>
                 <a th:href="@{/portal(ad=${nextAd})}" class="next adctl">>></a>
             </div>
     
@@ -95,7 +99,7 @@ p {
                 <div th:each="p : ${team}" class="border-start border-top border-bottom border-danger schedule-item">
                     <div th:each="map : ${p}">
                         <div class="h position-relative">
-                            <div class="border-bottom border-danger p-3" th:classappend="|${map.key.dayOfWeek.toString == 'SUNDAY' ? 'sunday' : ''} ${map.key.dayOfWeek.toString == 'SATURDAY' ? 'saturday' : ''}|">
+                            <div class="border-bottom border-danger p-2" th:classappend="|${map.key.dayOfWeek.toString == 'SUNDAY' ? 'sunday' : ''} ${map.key.dayOfWeek.toString == 'SATURDAY' ? 'saturday' : ''}|">
                                 [[${#temporals.format(map.key, 'yyyy/MM/dd(E)')}]]
                             </div>
                             <a th:href="@{/portal/regist?status=team&day={day}(day=${map.key})}" class="plus position-absolute end-0 bottom-0">+</a>

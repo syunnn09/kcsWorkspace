@@ -22,7 +22,9 @@ public class CommonUtils {
 	}
 
 	public static LocalDate getStartDate(int ad) {
-		ad += 1;
+		if (LocalDate.now().getDayOfWeek() != DayOfWeek.SUNDAY) {
+			ad += 1;
+		}
 		return getDate(DayOfWeek.SUNDAY).minusDays(ad*7);
 	}
 
@@ -50,5 +52,12 @@ public class CommonUtils {
 			case SATURDAY -> 6;
 			default -> 0;
 		};
+	}
+
+	public static LocalDate getEndDate(LocalDate start) {
+		if (start.getDayOfWeek() == DayOfWeek.SUNDAY) {
+			start = start.plusDays(7);
+		}
+		return start.with(DayOfWeek.SATURDAY);
 	}
 }

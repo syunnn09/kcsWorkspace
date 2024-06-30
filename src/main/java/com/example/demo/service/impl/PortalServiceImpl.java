@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Bbs;
+import com.example.demo.entity.Facility;
+import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
 import com.example.demo.form.WorkDetail;
 import com.example.demo.repository.BbsRepository;
+import com.example.demo.repository.FacilityRepository;
+import com.example.demo.repository.FacilityReserveRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkDetailRepository;
@@ -37,12 +41,22 @@ public class PortalServiceImpl implements PortalService {
 	@Autowired
 	WorkDetailRepository workDetailRepository;
 
+	@Autowired
+	FacilityRepository facilityRepository;
+
+	@Autowired
+	FacilityReserveRepository facilityReserveRepository;
+
+	public <T> List<T> convertToArray(Iterable<T> obj) {
+		List<T> list = new ArrayList<>();
+		obj.forEach(list::add);
+		return list;
+	}
+
 	@Override
 	public List<Thread> getAllThreads() {
-		Iterable<Thread> all = threadRepository.findAll();
-		List<Thread> threads = new ArrayList<>();
-		all.forEach(threads::add);
-		return threads;
+		Iterable<Thread> threads = threadRepository.findAll();
+		return convertToArray(threads);
 	}
 
 	@Override
@@ -95,5 +109,17 @@ public class PortalServiceImpl implements PortalService {
 	@Override
 	public List<WorkDetail> getWorkDetail(int workid) {
 		return workDetailRepository.getWorkDetail(workid);
+	}
+
+	@Override
+	public List<Facility> getFacilities() {
+		Iterable<Facility> facilities = facilityRepository.findAll();
+		return convertToArray(facilities);
+	}
+
+	@Override
+	public List<FacilityReserve> getReserves() {
+		Iterable<FacilityReserve> reserves = facilityReserveRepository.findAll();
+		return convertToArray(reserves);
 	}
 }
