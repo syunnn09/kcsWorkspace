@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,18 +37,35 @@ public class Work {
 		return updateDate.format(dateTimeFormatter);
 	}
 
-	public String year() {
+	private LocalDate dateTime() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return LocalDate.parse(day, formatter);
+	}
+
+	public String updateYear() {
 		return String.valueOf(updateDate.getYear());
 	}
 
-	public String month() {
+	public String updateMonth() {
 		return String.valueOf(updateDate.getMonthValue());
 	}
 
-	public String date() {
+	public String updateDay() {
 		return String.valueOf(updateDate.getDayOfMonth());
 	}
 
+	public String year() {
+		return String.valueOf(dateTime().getYear());
+	}
+
+	public String month() {
+		return String.valueOf(dateTime().getMonthValue());
+	}
+
+	public String date() {
+		return String.valueOf(dateTime().getDayOfMonth());
+		
+	}
 	public boolean isNew() {
 		return false;
 	}

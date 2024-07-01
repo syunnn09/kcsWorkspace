@@ -91,7 +91,12 @@
 <body>
     <div class="main">
         <h1 class="text-center m-3">作業報告書</h1>
-        <p class="text-end">報告日： [[${today.year}]] 年 [[${today.monthValue}]] 月 [[${today.dayOfMonth}]] 日</p>
+        <div th:if="${workForm.isNew}">
+            <p class="text-end">報告日： [[${today.year}]] 年 [[${today.monthValue}]] 月 [[${today.dayOfMonth}]] 日</p>
+        </div>
+        <div th:unless="${workForm.isNew}">
+            <p class="text-end">報告日： [[${workForm.updateYear}]] 年 [[${workForm.updateMonth}]] 月 [[${workForm.updateDay}]] 日</p>
+        </div>
         <form method="post" th:object="${workForm}" name="form">
             <input type="hidden" name="userid" th:value="${user.userid}">
             <input type="hidden" name="count" th:value="${count}">
@@ -195,11 +200,11 @@ if (add !== null) {
         document.form.count.value = count;
         row.innerHTML = `
             <td class="center">${count}</td>
-            <td colspan="4" class="center"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
-            <td colspan="6"><input type="text" name="detail[]"></td>
+            <td colspan="3" class="center"><input type="text" name="start[]" class="time"> ~ <input type="text" name="end[]" class="time"></td>
+            <td colspan="7"><input type="text" name="detail[]"></td>
             <td colspan="2" class="center"><input type="text" name="progress[]"></td>
             <td colspan="2"><input type="text" name="remarks[]"></td>
-            <td onclick="deleteRow(${count})" class="delete">削除</td>`;
+            <td onclick="deleteRow(${count})" class="delete print">削除</td>`;
     });
 }
 
