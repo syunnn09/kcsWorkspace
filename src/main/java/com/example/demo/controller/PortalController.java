@@ -20,10 +20,10 @@ import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.form.BbsForm;
 import com.example.demo.form.ScheduleForm;
-import com.example.demo.service.NotificationService;
 import com.example.demo.service.PortalService;
 import com.example.demo.service.ScheduleService;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.NotificationManager;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
@@ -36,13 +36,13 @@ public class PortalController {
 	UserService userService;
 
 	@Autowired
-	NotificationService service;
-
-	@Autowired
 	ScheduleService scheduleService;
 
 	@Autowired
 	PortalService portalService;
+
+	@Autowired
+	NotificationManager notificationManager;
 
 	@Autowired
 	HttpSession session;
@@ -66,7 +66,7 @@ public class PortalController {
 		}
 		int next = Integer.valueOf(ad);
 		model.addAttribute("user", user);
-		model.addAttribute("notifications", service.getNotification(user.getUserid()));
+		model.addAttribute("notifications", notificationManager.getNotifications());
 		Schedules personalSchedules = new Schedules(scheduleService.getPersonalSchedule(user.getUserid(), next), next);
 		model.addAttribute("personal", personalSchedules.getSchedules());
 		Schedules teamSchedules = new Schedules(scheduleService.getTeamSchedule(user.getDepartmentId(), next), next);

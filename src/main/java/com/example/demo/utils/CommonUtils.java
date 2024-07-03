@@ -3,19 +3,8 @@ package com.example.demo.utils;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.demo.entity.Notification;
 
 public class CommonUtils {
-
-	public static List<Notification> getSampleNotification() {
-		List<Notification> notifications = new ArrayList<>();
-		notifications.add(new Notification(1, "新着メッセージがあります", false));
-		notifications.add(new Notification(1, "電話メモがあります", false));
-		return notifications;
-	}
 
 	public static LocalDate getStartDate() {
 		return getStartDate(0);

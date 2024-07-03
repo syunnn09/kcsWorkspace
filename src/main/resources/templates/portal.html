@@ -48,11 +48,18 @@ p {
             </div>
         </div>
 
-        <div th:if="${notifications}" class="notification mb-5">
+        <div class="notification mb-5">
             <p class="text-start">【お知らせ】</p>
-            <ul class="list-group text-start">
-                <li th:each="notification : ${notifications}" th:text="${notification.message}" class="list-group-item"></li>
-            </ul>
+            <div th:if="${notifications.size != 0}">
+                <ul class="list-group text-start">
+                    <li th:each="notification : ${notifications}" class="list-group-item">
+                        <a th:href="${notification.path}">[[${notification.message}]]</a>
+                    </li>
+                </ul>
+            </div>
+            <div th:if="${notifications.size == 0}">
+                <p class="text-start">お知らせはありません。</p>
+            </div>
         </div>
 
         <div class="schedule mb-5">

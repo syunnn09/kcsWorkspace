@@ -1,18 +1,21 @@
 package com.example.demo.entity;
 
-import org.springframework.data.annotation.Id;
+public enum Notification {
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+	PHONE("電話メモがあります", "/portal/phone");
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Notification {
+	private String message;
+	private String path;
+	Notification(String message, String path) {
+		this.message = message;
+		this.path = path;
+	}
 
-	@Id
-	public int id;
-	public String message;
-	public boolean isRead;
+	public String getMessage() {
+		return this.message;
+	}
+
+	public String getPath() {
+		return this.path;
+	}
 }
