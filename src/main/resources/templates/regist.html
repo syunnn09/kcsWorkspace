@@ -11,7 +11,7 @@
         <h1>社内グループウェア</h1>
         <p>スケジュール登録画面</p>
 
-        <form method="post" th:object="${scheduleForm}">
+        <form method="post" name="form" th:object="${scheduleForm}">
             <table border="0">
                 <tr class="py-3">
                     <td class="px-3">タイトル</td>
@@ -56,7 +56,7 @@
                     <td colspan="2">
                         <div class="pt-3 d-flex justify-content-between align-items-center">
                             <a th:href="@{/portal}">ポータルへ</a>
-                            <input type="submit" value="登録">
+                            <input type="submit" name="submit" value="登録">
                         </div>
                     </td>
                 </tr>
@@ -64,4 +64,26 @@
         </form>
     </center>
 </body>
+<script>
+const start = form.startTime;
+start.addEventListener('change', (e) => {
+    const end = form.endTime;
+    if (end.value === '') {
+        let time = start.value.split(':');
+        end.value = Number(time[0]) + 1 + ':' + time[1];
+    }
+});
+
+const check = (_) => {
+    if (!personal.checked && !team.checked) {
+        form.submit.disabled = true;
+    } else {
+        form.submit.disabled = false;
+    }
+}
+const personal = form.personal;
+const team = form.team;
+personal.addEventListener('change', check);
+team.addEventListener('change', check);
+</script>
 </html>
