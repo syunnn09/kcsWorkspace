@@ -80,5 +80,39 @@ public class ApiController {
 		return card.getStatus();
 	}
 
-//	@PostMapping("timecard/rest")
+	@PostMapping("timecard/leaving")
+	public String leaving() {
+		if (getUser() == null) {
+			return Status.FAILED.status;
+		}
+
+		Timecard card = portalService.getTimecard(getUser().getUserid());
+		card.setStatus(TimecardStatus.LEAVING.getStatus());
+		timecardRepository.save(card);
+		return card.getStatus();
+	}
+
+	@PostMapping("timecard/rest")
+	public String rest() {
+		if (getUser() == null) {
+			return Status.FAILED.status;
+		}
+
+		Timecard card = portalService.getTimecard(getUser().getUserid());
+		card.setStatus(TimecardStatus.REST.getStatus());
+		timecardRepository.save(card);
+		return card.getStatus();
+	}
+
+	@PostMapping("timecard/restEnd")
+	public String restEnd() {
+		if (getUser() == null) {
+			return Status.FAILED.status;
+		}
+
+		Timecard card = portalService.getTimecard(getUser().getUserid());
+		card.setStatus(TimecardStatus.ATWORK.getStatus());
+		timecardRepository.save(card);
+		return card.getStatus();
+	}
 }

@@ -188,7 +188,6 @@ public class PortalController {
 			return redirectLogin();
 		}
 		Timecard card = portalService.getTimecard(user.getUserid());
-		System.out.println(card);
 		model.addAttribute("status", card.getStatus());
 		return "timecard";
 	}

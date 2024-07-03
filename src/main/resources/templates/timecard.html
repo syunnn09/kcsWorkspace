@@ -51,7 +51,7 @@
                 <div id="attendance" class="button">出勤</div>
                 <div id="leaving" class="button">退勤</div>
                 <div id="rest" class="button">休憩</div>
-                <div id="rest-return" class="button">復帰</div>
+                <div id="rest-end" class="button">復帰</div>
             </div>
         </div>
     </center>
@@ -63,24 +63,24 @@ const time = document.getElementById('time');
 const attendance = document.getElementById('attendance');
 const leaving = document.getElementById('leaving');
 const rest = document.getElementById('rest');
-const restReturn = document.getElementById('rest-return');
+const restEnd = document.getElementById('rest-end');
 
 function onChangeStatus() {
     if (status === 'leaving') {
         attendance.classList.remove('disabled');
         leaving.classList.add('disabled');
         rest.classList.add('disabled');
-        restReturn.classList.add('disabled');
+        restEnd.classList.add('disabled');
     } else if (status === 'atwork') {
         attendance.classList.add('disabled');
         leaving.classList.remove('disabled');
         rest.classList.remove('disabled');
-        restReturn.classList.add('disabled');
+        restEnd.classList.add('disabled');
     } else if (status === 'rest') {
         attendance.classList.add('disabled');
         leaving.classList.add('disabled');
         rest.classList.add('disabled');
-        restReturn.classList.remove('disabled');
+        restEnd.classList.remove('disabled');
     }
 }
 
@@ -105,9 +105,28 @@ attendance.addEventListener('click', () => {
         });
 });
 leaving.addEventListener('click', () => {
-    fetch('http://localhost:8080/api/timecard/attendance', { method: 'post' })
+    fetch('http://localhost:8080/api/timecard/leaving', { method: 'post' })
         .then(res => res.text())
-        .then(res => console.log(res));
+        .then(res => {
+            status = res;
+            onChangeStatus();
+        });
 });
+rest.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/timecard/rest', { method: 'post' })
+    .then(res => res.text())
+    .then(res => {
+        status = res;
+        onChangeStatus();
+    });
+});
+restEnd.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/timecard/restEnd', { method: 'post' })
+    .then(res => res.text())
+    .then(res => {
+        status = res;
+        onChangeStatus();
+    });
+})
 </script>
 </html>
