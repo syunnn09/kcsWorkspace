@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<style>
+.main {
+    max-width: 1000px;
+}
+</style>
+<body>
+    <center>
+        <div class="main">
+            <h1>社内グループウェア</h1>
+            <p>電話メモ一覧</p>
+            <div class="d-flex justify-content-around">
+                <a th:href="@{/portal/phone/create}">電話メモ作成</a>
+                <a th:href="@{/portal/}">ポータルへ</a>
+            </div>
+    
+            <table class="table table-striped">
+                <thead>
+                    <th>時刻</th>
+                    <th>状態</th>
+                    <th>伝言</th>
+                    <th>発信者</th>
+                </thead>
+                <tbody>
+                    <tr th:each="phone : ${phones}">
+                        <th>[[${phone.datetime}]]</th>
+                        <th><input type="button" th:id="'phone' + ${phone.id}" th:onclick="submit([[${phone.id}]])" th:value="${phone.status}" th:disabled="${phone.checked}"></th>
+                        <th>[[${phone.message}]]</th>
+                        <th>[[${phone.from}]]様</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </center>
+</body>
+<script>
+const submit = (id) => {
+    const url = "http://localhost:8080/api/phone/submit?phoneId=" + id;
+    fetch(url, { method: "POST" })
+        .then((res) => res.text())
+        .then((text) => {
+            if (text === 'success') {
+                const el = document.getElementById("phone" + id);
+                el.value = "確認済";
+                el.disabled = "disabled";
+            }
+        });
+}
+</script>
+</html>

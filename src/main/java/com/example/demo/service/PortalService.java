@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Facility;
 import com.example.demo.entity.FacilityReserve;
+import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
@@ -33,7 +34,17 @@ public interface PortalService {
 
 	public List<WorkDetail> getWorkDetail(int workid);
 
-	List<Facility> getFacilities();
+	public List<Facility> getFacilities();
 
-	List<FacilityReserve> getReserves();
+	public List<FacilityReserve> getReserves();
+
+	public List<Phone> getPhone(String userid);
+
+	public Phone getPhoneById(int phoneId);
+
+	public boolean submitPhone(int phoneId); 
+
+	public boolean submitPhone(Phone phone);
+
+	public void savePhone(Phone phone);
 }

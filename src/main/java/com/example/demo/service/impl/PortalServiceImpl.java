@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Facility;
 import com.example.demo.entity.FacilityReserve;
+import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
@@ -17,6 +18,7 @@ import com.example.demo.form.WorkDetail;
 import com.example.demo.repository.BbsRepository;
 import com.example.demo.repository.FacilityRepository;
 import com.example.demo.repository.FacilityReserveRepository;
+import com.example.demo.repository.PhoneRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkDetailRepository;
@@ -46,6 +48,9 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	FacilityReserveRepository facilityReserveRepository;
+
+	@Autowired
+	PhoneRepository phoneRepository;
 
 	public <T> List<T> convertToArray(Iterable<T> obj) {
 		List<T> list = new ArrayList<>();
@@ -121,5 +126,36 @@ public class PortalServiceImpl implements PortalService {
 	public List<FacilityReserve> getReserves() {
 		Iterable<FacilityReserve> reserves = facilityReserveRepository.findAll();
 		return convertToArray(reserves);
+	}
+
+	@Override
+	public List<Phone> getPhone(String userid) {
+		return phoneRepository.findByToIs(userid);
+	}
+
+	@Override
+	public Phone getPhoneById(int phoneId) {
+		return phoneRepository.findById(phoneId).get();
+	}
+
+	@Override
+	public boolean submitPhone(int phoneId) {
+		Phone phone = getPhoneById(phoneId);
+		return submitPhone(phone);
+	}
+
+	@Override
+	public boolean submitPhone(Phone phone) {
+		if (phone != null) {
+			phone.setChecked(true);
+			phoneRepository.save(phone);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void savePhone(Phone phone) {
+		phoneRepository.save(phone);
 	}
 }

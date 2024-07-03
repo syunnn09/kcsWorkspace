@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<style>
+.main {
+    max-width: 1000px;
+}
+</style>
+<body>
+    <center>
+        <div class="main">
+            <h1>社内グループウェア</h1>
+            <p>電話メモ作成</p>
+            <a th:href="@{/portal/}">ポータルへ</a>
+
+            <form method="post" th:object="${phoneForm}">
+                <input type="hidden" name="self" th:value="${user.userid}">
+
+                <table class="table table-borderless">
+                    <tr>
+                        <th>宛先(id)</th>
+                        <th><input type="text" th:field="*{to}"></th>
+                    </tr>
+                    <tr>
+                        <th>時刻</th>
+                        <th><input type="datetime-local" name="time" th:value="${phoneForm.formattedTime}">ごろ</th>
+                    </tr>
+                    <tr>
+                        <th>依頼主</th>
+                        <th><input type="text" th:field="*{from}"></th>
+                    </tr>
+                    <tr>
+                        <th>電話番号(任意)</th>
+                        <th><input type="text" th:field="*{phone}"></th>
+                    </tr>
+                    <tr>
+                        <th>伝言</th>
+                        <th><textarea th:field="*{message}" cols="30" rows="3"></textarea></th>
+                    </tr>
+                </table>
+                <input type="button" onclick="submit()" value="登録する">
+            </form>
+        </div>
+    </center>
+</body>
+</html>
