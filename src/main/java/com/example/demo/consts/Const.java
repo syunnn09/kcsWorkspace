@@ -27,4 +27,18 @@ public class Const {
 			return Arrays.stream(Report.values()).anyMatch(r -> r.getType().equals(target));
 		}
 	}
+
+	public static enum TimecardStatus {
+		LEAVING("leaving"),
+		ATWORK("atwork"),
+		REST("rest");
+
+		private String status;
+		private TimecardStatus(String status) {
+			this.status = status;
+		}
+		public String getStatus() {
+			return this.status;
+		}
+	}
 }

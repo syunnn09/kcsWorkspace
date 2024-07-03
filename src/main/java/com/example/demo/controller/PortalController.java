@@ -17,6 +17,7 @@ import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Calendar;
 import com.example.demo.entity.Schedules;
 import com.example.demo.entity.Thread;
+import com.example.demo.entity.Timecard;
 import com.example.demo.entity.User;
 import com.example.demo.form.BbsForm;
 import com.example.demo.form.ScheduleForm;
@@ -178,5 +179,17 @@ public class PortalController {
 		model.addAttribute("facilities", portalService.getFacilities());
 		model.addAttribute("date", date);
 		return "regist_facility";
+	}
+
+	@GetMapping("timecard")
+	public String timecard(Model model) {
+		User user = getUser();
+		if (user == null) {
+			return redirectLogin();
+		}
+		Timecard card = portalService.getTimecard(user.getUserid());
+		System.out.println(card);
+		model.addAttribute("status", card.getStatus());
+		return "timecard";
 	}
 }

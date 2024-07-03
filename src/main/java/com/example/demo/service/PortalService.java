@@ -7,6 +7,7 @@ import com.example.demo.entity.Facility;
 import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
+import com.example.demo.entity.Timecard;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
@@ -47,4 +48,6 @@ public interface PortalService {
 	public boolean submitPhone(Phone phone);
 
 	public void savePhone(Phone phone);
+
+	public Timecard getTimecard(String userid);
 }

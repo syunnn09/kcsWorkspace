@@ -11,6 +11,7 @@ import com.example.demo.entity.Facility;
 import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
+import com.example.demo.entity.Timecard;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
@@ -20,6 +21,7 @@ import com.example.demo.repository.FacilityRepository;
 import com.example.demo.repository.FacilityReserveRepository;
 import com.example.demo.repository.PhoneRepository;
 import com.example.demo.repository.ThreadRepository;
+import com.example.demo.repository.TimecardRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkDetailRepository;
 import com.example.demo.repository.WorkRepository;
@@ -51,6 +53,9 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	PhoneRepository phoneRepository;
+
+	@Autowired
+	TimecardRepository timecardRepository;
 
 	public <T> List<T> convertToArray(Iterable<T> obj) {
 		List<T> list = new ArrayList<>();
@@ -157,5 +162,10 @@ public class PortalServiceImpl implements PortalService {
 	@Override
 	public void savePhone(Phone phone) {
 		phoneRepository.save(phone);
+	}
+
+	@Override
+	public Timecard getTimecard(String userid) {
+		return timecardRepository.findById(userid).get();
 	}
 }

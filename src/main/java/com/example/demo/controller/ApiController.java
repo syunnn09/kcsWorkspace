@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.consts.Const.TimecardStatus;
 import com.example.demo.entity.Phone;
+import com.example.demo.entity.Timecard;
 import com.example.demo.entity.User;
+import com.example.demo.repository.TimecardRepository;
 import com.example.demo.service.PortalService;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +27,9 @@ public class ApiController {
 
 	@Autowired
 	PortalService portalService;
+
+	@Autowired
+	TimecardRepository timecardRepository;
 
 	private User getUser() {
 		return (User) session.getAttribute("user");
@@ -61,4 +67,18 @@ public class ApiController {
 		Status status = Status.getStatus(res);
 		return status.status;
 	}
+
+	@PostMapping("timecard/attendance")
+	public String attendance() {
+		if (getUser() == null) {
+			return Status.FAILED.status;
+		}
+
+		Timecard card = portalService.getTimecard(getUser().getUserid());
+		card.setStatus(TimecardStatus.ATWORK.getStatus());
+		timecardRepository.save(card);
+		return card.getStatus();
+	}
+
+//	@PostMapping("timecard/rest")
 }
