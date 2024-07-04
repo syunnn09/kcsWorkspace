@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.consts.Const.TimecardStatus;
+import com.example.demo.consts.Const.TimecardTimeStatus;
 import com.example.demo.entity.Phone;
 import com.example.demo.entity.Timecard;
+import com.example.demo.entity.TimecardTime;
 import com.example.demo.entity.User;
 import com.example.demo.repository.TimecardRepository;
+import com.example.demo.repository.TimecardTimeRepository;
 import com.example.demo.service.PortalService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +36,9 @@ public class ApiController {
 
 	@Autowired
 	TimecardRepository timecardRepository;
+
+	@Autowired
+	TimecardTimeRepository timecardTimeRepository;
 
 	private User getUser() {
 		return (User) session.getAttribute("user");
@@ -72,12 +79,16 @@ public class ApiController {
 
 	@PostMapping("timecard/attendance")
 	public String attendance() {
-		if (getUser() == null) {
+		User user = getUser();
+		if (user == null) {
 			return Status.FAILED.status;
 		}
+		TimecardTime time = new TimecardTime(user.getUserid(), TimecardTimeStatus.WORK);
+		timecardTimeRepository.save(time);
 
 		Timecard card = portalService.getTimecard(getUser().getUserid());
 		card.setStatus(TimecardStatus.ATWORK.getStatus());
+		card.setTimeId(time.getId());
 		timecardRepository.save(card);
 		return card.getStatus();
 	}
@@ -90,18 +101,29 @@ public class ApiController {
 
 		Timecard card = portalService.getTimecard(getUser().getUserid());
 		card.setStatus(TimecardStatus.LEAVING.getStatus());
+
+		TimecardTime time = portalService.getTimecardTime(card.getTimeId());
+		time.setEnd(LocalDateTime.now());
+		timecardTimeRepository.save(time);
+
+		card.setTimeId(0);
 		timecardRepository.save(card);
 		return card.getStatus();
 	}
 
 	@PostMapping("timecard/rest")
 	public String rest() {
-		if (getUser() == null) {
+		User user = getUser();
+		if (user == null) {
 			return Status.FAILED.status;
 		}
 
+		TimecardTime time = new TimecardTime(user.getUserid(), TimecardTimeStatus.REST);
+		timecardTimeRepository.save(time);
+
 		Timecard card = portalService.getTimecard(getUser().getUserid());
 		card.setStatus(TimecardStatus.REST.getStatus());
+		card.setRestId(time.getId());
 		timecardRepository.save(card);
 		return card.getStatus();
 	}
@@ -114,6 +136,12 @@ public class ApiController {
 
 		Timecard card = portalService.getTimecard(getUser().getUserid());
 		card.setStatus(TimecardStatus.ATWORK.getStatus());
+
+		TimecardTime time = portalService.getTimecardTime(card.getRestId());
+		time.setEnd(LocalDateTime.now());
+		timecardTimeRepository.save(time);
+
+		card.setRestId(0);
 		timecardRepository.save(card);
 		return card.getStatus();
 	}
@@ -125,11 +153,10 @@ public class ApiController {
 		}
 
 		List<Timecard> cards = portalService.getCards();
-		String content = "<div id=\"emp\">";
+		String content = "";
 		for (Timecard card : cards) {
-			content += "<p>" + card.getUserid() + " : " + card.getStatusString() + "</p>";
+			content += "<div class=\"empcard\"><p class=\"name\">" + card.getUserid() + "</p><p class=\"status\">" + card.getStatusString() + "</p></div>";
 		}
-		content += "</div>";
 		return content;
 	}
 }

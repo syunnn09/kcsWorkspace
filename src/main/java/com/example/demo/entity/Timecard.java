@@ -18,6 +18,8 @@ public class Timecard implements Persistable<String> {
 	@Id
 	private String userid;
 	private String status;
+	private int timeId;
+	private int restId;
 
 //	@OneToOne
 //	@JoinColumn(name="userid")

@@ -9,8 +9,7 @@
 </head>
 <style>
 .main {
-    width: 1000px;
-    max-width: 1000px;
+    width: calc(100% - 200px);
     min-width: 350px;
 }
 p {
@@ -41,15 +40,35 @@ p {
 }
 .center {
     display: flex;
-    justify-content: space-between;
+}
+@media screen and (max-width: 560px) {
+    .main {
+        width: 100%;
+    }
+    .center {
+        justify-content: center;
+        flex-direction: column;
+    }
+    .emps {
+        display: none;
+    }
 }
 #reload {
+    width: 100px;
     padding: 0.5rem;
     border: 1px solid #faf;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
     justify-content: center;
+}
+#emp {
+    width: 200px;
+}
+.empcard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
 <body>
@@ -78,7 +97,10 @@ p {
                 <p>更新</p>
             </div>
             <div id="emp">
-                <p th:each="card : ${cards}">[[${card.userid}]] : [[${card.statusString}]]</p>
+                <div th:each="card : ${cards}" class="empcard">
+                    <p class="name">[[${card.userid}]]</p>
+                    <p class="status">[[${card.statusString}]]</p>
+                </div>
             </div>
         </div>
     </center>
@@ -139,6 +161,7 @@ attendance.addEventListener('click', () => {
             .then(res => {
                 status = res;
                 onChangeStatus();
+                refresh();
             });
     }
 });
@@ -150,6 +173,7 @@ leaving.addEventListener('click', () => {
             .then(res => {
                 status = res;
                 onChangeStatus();
+                refresh();
             });
     }
 });
@@ -161,6 +185,7 @@ rest.addEventListener('click', () => {
             .then(res => {
                 status = res;
                 onChangeStatus();
+                refresh();
             });
     }
 });
@@ -172,13 +197,17 @@ restEnd.addEventListener('click', () => {
             .then(res => {
                 status = res;
                 onChangeStatus();
+                refresh();
             });
     }
 });
-reload.addEventListener('click', () => {
+
+const refresh = () => {
     fetch('http://localhost:8080/api/timecard/reload', { method: 'post' })
         .then(res => res.text())
         .then(res => emp.innerHTML = res);
-})
+}
+
+reload.addEventListener('click', refresh);
 </script>
 </html>

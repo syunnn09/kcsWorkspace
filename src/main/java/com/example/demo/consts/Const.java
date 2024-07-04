@@ -55,4 +55,19 @@ public class Const {
 			return LEAVING;
 		}
 	}
+
+	public static enum TimecardTimeStatus {
+		WORK(1),
+		REST(2);
+
+		private int status;
+
+		private TimecardTimeStatus(int status) {
+			this.status = status;
+		}
+
+		public int get() {
+			return this.status;
+		}
+	}
 }

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `bbs` (
   KEY `userid` (`userid`),
   CONSTRAINT `bbs_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`id`),
   CONSTRAINT `bbs_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- テーブル workspace.bbs: ~7 rows (約) のデータをダンプしています
 INSERT INTO `bbs` (`id`, `thread_id`, `userid`, `text`, `post_at`) VALUES
@@ -42,7 +42,8 @@ INSERT INTO `bbs` (`id`, `thread_id`, `userid`, `text`, `post_at`) VALUES
 	(6, 1, '0001', 'ホークス強すぎる', '2024-06-24 15:05:53'),
 	(7, 1, '0002', 'オリックスがんばれ', '2024-06-24 15:06:17'),
 	(8, 1, '0001', 'aaa', '2024-06-26 09:23:37'),
-	(9, 1, '0001', 'hello', '2024-07-01 15:17:18');
+	(9, 1, '0001', 'hello', '2024-07-01 15:17:18'),
+	(10, 1, '0001', '岸潤一郎さんwww', '2024-07-04 15:34:20');
 
 --  テーブル workspace.department の構造をダンプしています
 CREATE TABLE IF NOT EXISTS `department` (
@@ -184,6 +185,41 @@ CREATE TABLE IF NOT EXISTS `thread` (
 INSERT INTO `thread` (`id`, `title`) VALUES
 	(1, 'プロ野球');
 
+--  テーブル workspace.timecard の構造をダンプしています
+CREATE TABLE IF NOT EXISTS `timecard` (
+  `userid` varchar(255) NOT NULL,
+  `status` varchar(30) DEFAULT 'leaving',
+  `time_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`userid`),
+  CONSTRAINT `timecard_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- テーブル workspace.timecard: ~2 rows (約) のデータをダンプしています
+INSERT INTO `timecard` (`userid`, `status`, `time_id`) VALUES
+	('0001', 'atwork', 7),
+	('0002', 'atwork', 6);
+
+--  テーブル workspace.timecard_time の構造をダンプしています
+CREATE TABLE IF NOT EXISTS `timecard_time` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` varchar(255) DEFAULT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime DEFAULT NULL,
+  `status` smallint(6) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `userid` (`userid`),
+  CONSTRAINT `timecard_time_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- テーブル workspace.timecard_time: ~4 rows (約) のデータをダンプしています
+INSERT INTO `timecard_time` (`id`, `userid`, `start`, `end`, `status`) VALUES
+	(1, '0001', '2024-07-04 04:01:22', '2024-07-04 15:07:47', 1),
+	(2, '0002', '2024-07-04 04:01:22', '2024-07-04 15:21:53', 1),
+	(4, '0001', '2024-07-04 15:22:22', '2024-07-04 15:27:44', 1),
+	(5, '0002', '2024-07-04 15:28:00', '2024-07-04 15:28:07', 1),
+	(6, '0002', '2024-07-04 15:28:26', NULL, 1),
+	(7, '0001', '2024-07-04 15:28:49', NULL, 1);
+
 --  テーブル workspace.users の構造をダンプしています
 CREATE TABLE IF NOT EXISTS `users` (
   `userid` varchar(255) NOT NULL,
@@ -240,24 +276,6 @@ INSERT INTO `work_detail` (`id`, `workid`, `num`, `START`, `END`, `detail`, `pro
 	(2, 1, 1, '', '', NULL, '', ''),
 	(4, 11, 0, '9:00', '15:00', '作業', '完了', ''),
 	(5, 12, 0, '9:00', '18:00', '作業', '途中', '');
-
-CREATE TABLE if NOT exists timecard(
-	userid VARCHAR(255) PRIMARY KEY REFERENCES users(userid),
-	`status` VARCHAR(30) DEFAULT 'leaving'
-);
-
-INSERT INTO timecard VALUES('0001', 'leaving');
-
-CREATE TABLE timecard_time(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	userid VARCHAR(255) REFERENCES users(userid),
-	`start` DATETIME NOT NULL,
-	`end` DATETIME,
-	`status` SMALLINT DEFAULT 1
-);
-
-INSERT INTO timecard_time(userid, `start`) VALUES('0001', NOW());
-INSERT INTO timecard_time(userid, `start`) VALUES('0002', NOW());
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

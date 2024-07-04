@@ -14,6 +14,7 @@ import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.Timecard;
+import com.example.demo.entity.TimecardTime;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
@@ -24,6 +25,7 @@ import com.example.demo.repository.FacilityReserveRepository;
 import com.example.demo.repository.PhoneRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.TimecardRepository;
+import com.example.demo.repository.TimecardTimeRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkDetailRepository;
 import com.example.demo.repository.WorkRepository;
@@ -58,6 +60,9 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	TimecardRepository timecardRepository;
+
+	@Autowired
+	TimecardTimeRepository timecardTimeRepository;
 
 	public <T> List<T> convertToList(Iterable<T> obj) {
 		List<T> list = new ArrayList<>();
@@ -181,7 +186,7 @@ public class PortalServiceImpl implements PortalService {
 
 	@Override
 	public void saveTimecard(String userid) {
-		Timecard card = new Timecard(userid, TimecardStatus.LEAVING.getStatus(), true);
+		Timecard card = new Timecard(userid, TimecardStatus.LEAVING.getStatus(), 0, 0, true);
 		timecardRepository.save(card);
 	}
 
@@ -189,5 +194,10 @@ public class PortalServiceImpl implements PortalService {
 	public List<Timecard> getCards() {
 		Iterable<Timecard> cards = timecardRepository.findAll();
 		return convertToList(cards);
+	}
+
+	@Override
+	public TimecardTime getTimecardTime(int id) {
+		return get(timecardTimeRepository.findById(id));
 	}
 }

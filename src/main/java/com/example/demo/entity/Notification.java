@@ -2,7 +2,9 @@ package com.example.demo.entity;
 
 public enum Notification {
 
-	PHONE("電話メモがあります", "/portal/phone");
+	PHONE("電話メモがあります", "/portal/phone"),
+	ATWORK("現在勤務中です", "/portal/timecard"),
+	REST("現在休憩中です", "/portal/timecard");
 
 	private String message;
 	private String path;

@@ -8,6 +8,7 @@ import com.example.demo.entity.FacilityReserve;
 import com.example.demo.entity.Phone;
 import com.example.demo.entity.Thread;
 import com.example.demo.entity.Timecard;
+import com.example.demo.entity.TimecardTime;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
@@ -54,4 +55,6 @@ public interface PortalService {
 	public void saveTimecard(String userid);
 
 	public List<Timecard> getCards();
+
+	public TimecardTime getTimecardTime(int id);
 }
