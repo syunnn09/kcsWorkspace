@@ -50,4 +50,8 @@ public interface PortalService {
 	public void savePhone(Phone phone);
 
 	public Timecard getTimecard(String userid);
+
+	public void saveTimecard(String userid);
+
+	public List<Timecard> getCards();
 }

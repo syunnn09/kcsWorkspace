@@ -29,16 +29,30 @@ public class Const {
 	}
 
 	public static enum TimecardStatus {
-		LEAVING("leaving"),
-		ATWORK("atwork"),
-		REST("rest");
+		LEAVING("leaving", ""),
+		ATWORK("atwork", "出勤中"),
+		REST("rest", "休憩中");
 
 		private String status;
-		private TimecardStatus(String status) {
+		private String statusString;
+		private TimecardStatus(String status, String str) {
 			this.status = status;
+			this.statusString = str;
 		}
 		public String getStatus() {
 			return this.status;
+		}
+		public String getStatusString() {
+			return this.statusString;
+		}
+
+		public static TimecardStatus getStatus(String status) {
+			for (TimecardStatus stat : TimecardStatus.values()) {
+				if (stat.status.equals(status)) {
+					return stat;
+				}
+			}
+			return LEAVING;
 		}
 	}
 }

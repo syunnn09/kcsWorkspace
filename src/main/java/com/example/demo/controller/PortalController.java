@@ -187,8 +187,13 @@ public class PortalController {
 		if (user == null) {
 			return redirectLogin();
 		}
+		if (portalService.getTimecard(user.getUserid()) == null) {
+			portalService.saveTimecard(user.getUserid());
+		}
 		Timecard card = portalService.getTimecard(user.getUserid());
+		List<Timecard> cards = portalService.getCards();
 		model.addAttribute("status", card.getStatus());
+		model.addAttribute("cards", cards);
 		return "timecard";
 	}
 }

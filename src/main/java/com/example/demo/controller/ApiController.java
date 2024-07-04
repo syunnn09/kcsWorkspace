@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -114,5 +116,20 @@ public class ApiController {
 		card.setStatus(TimecardStatus.ATWORK.getStatus());
 		timecardRepository.save(card);
 		return card.getStatus();
+	}
+
+	@PostMapping("timecard/reload")
+	public String reload() {
+		if (getUser() == null) {
+			return Status.FAILED.status;
+		}
+
+		List<Timecard> cards = portalService.getCards();
+		String content = "<div id=\"emp\">";
+		for (Timecard card : cards) {
+			content += "<p>" + card.getUserid() + " : " + card.getStatusString() + "</p>";
+		}
+		content += "</div>";
+		return content;
 	}
 }

@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <title>Document</title>
 </head>
 <style>
 .main {
+    width: 1000px;
     max-width: 1000px;
+    min-width: 350px;
+}
+p {
+    margin: 0;
 }
 .button {
     width: 70px;
@@ -33,9 +39,21 @@
     cursor: none;
     pointer-events: none;
 }
+.center {
+    display: flex;
+    justify-content: space-between;
+}
+#reload {
+    padding: 0.5rem;
+    border: 1px solid #faf;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
 </style>
 <body>
-    <center>
+    <center class="center">
         <div class="main">
             <h1>社内グループウェア</h1>
             <p>タイムカード</p>
@@ -54,6 +72,15 @@
                 <div id="rest-end" class="button">復帰</div>
             </div>
         </div>
+        <div class="emps">
+            <div id="reload">
+                <i class="bi bi-arrow-clockwise"></i>
+                <p>更新</p>
+            </div>
+            <div id="emp">
+                <p th:each="card : ${cards}">[[${card.userid}]] : [[${card.statusString}]]</p>
+            </div>
+        </div>
     </center>
 </body>
 <script>
@@ -64,6 +91,9 @@ const attendance = document.getElementById('attendance');
 const leaving = document.getElementById('leaving');
 const rest = document.getElementById('rest');
 const restEnd = document.getElementById('rest-end');
+
+const reload = document.getElementById('reload');
+const emp = document.getElementById('emp');
 
 function onChangeStatus() {
     if (status === 'leaving') {
@@ -84,49 +114,71 @@ function onChangeStatus() {
     }
 }
 
+const nextTiming = () => 1000 - Date.now() % 1000;
+const days = ['日','月','火','水','木','金','土'];
+
 (function() {
-    setInterval(() => {
+    let timer = setTimeout(function main() {
         const now = new Date();
-        date.innerHTML = now.toLocaleDateString('sv-SE');
-        const hour = ('0' + now.getHours()).slice(-2)
-        const minute = ('0' + now.getMinutes()).slice(-2)
-        const seconds = ('0' + now.getSeconds()).slice(-2)
+        const day = days[now.getDate()];
+        date.innerHTML = `${now.toLocaleDateString('sv-SE')} (${day})`;
+        const hour = ('0' + now.getHours()).slice(-2);
+        const minute = ('0' + now.getMinutes()).slice(-2);
+        const seconds = ('0' + now.getSeconds()).slice(-2);
         time.innerHTML = `${hour}:${minute}:${seconds}`;
-    }, 500);
+        timer = setTimeout(main, nextTiming());
+    }, nextTiming());
     onChangeStatus();
 })();
 
 attendance.addEventListener('click', () => {
-    fetch('http://localhost:8080/api/timecard/attendance', { method: 'post' })
-        .then(res => res.text())
-        .then(res => {
-            status = res;
-            onChangeStatus();
-        });
+    const res = window.confirm('出勤しますか？');
+    if (res && status === 'leaving') {
+        fetch('http://localhost:8080/api/timecard/attendance', { method: 'post' })
+            .then(res => res.text())
+            .then(res => {
+                status = res;
+                onChangeStatus();
+            });
+    }
 });
 leaving.addEventListener('click', () => {
-    fetch('http://localhost:8080/api/timecard/leaving', { method: 'post' })
-        .then(res => res.text())
-        .then(res => {
-            status = res;
-            onChangeStatus();
-        });
+    const res = window.confirm('退勤しますか？');
+    if (res && status === 'atwork') {
+        fetch('http://localhost:8080/api/timecard/leaving', { method: 'post' })
+            .then(res => res.text())
+            .then(res => {
+                status = res;
+                onChangeStatus();
+            });
+    }
 });
 rest.addEventListener('click', () => {
-    fetch('http://localhost:8080/api/timecard/rest', { method: 'post' })
-    .then(res => res.text())
-    .then(res => {
-        status = res;
-        onChangeStatus();
-    });
+    const res = window.confirm('休憩に入りますか？');
+    if (res && status === 'atwork') {
+        fetch('http://localhost:8080/api/timecard/rest', { method: 'post' })
+            .then(res => res.text())
+            .then(res => {
+                status = res;
+                onChangeStatus();
+            });
+    }
 });
 restEnd.addEventListener('click', () => {
-    fetch('http://localhost:8080/api/timecard/restEnd', { method: 'post' })
-    .then(res => res.text())
-    .then(res => {
-        status = res;
-        onChangeStatus();
-    });
+    const res = window.confirm('休憩を終わりますか？');
+    if (res && status === 'rest') {
+        fetch('http://localhost:8080/api/timecard/restEnd', { method: 'post' })
+            .then(res => res.text())
+            .then(res => {
+                status = res;
+                onChangeStatus();
+            });
+    }
+});
+reload.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/timecard/reload', { method: 'post' })
+        .then(res => res.text())
+        .then(res => emp.innerHTML = res);
 })
 </script>
 </html>

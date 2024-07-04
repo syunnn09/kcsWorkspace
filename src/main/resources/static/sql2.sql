@@ -16,6 +16,7 @@
 
 
 -- workspace のデータベース構造をダンプしています
+DROP DATABASE IF EXISTS `workspace`;
 CREATE DATABASE IF NOT EXISTS `workspace` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `workspace`;
 
@@ -246,6 +247,17 @@ CREATE TABLE if NOT exists timecard(
 );
 
 INSERT INTO timecard VALUES('0001', 'leaving');
+
+CREATE TABLE timecard_time(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	userid VARCHAR(255) REFERENCES users(userid),
+	`start` DATETIME NOT NULL,
+	`end` DATETIME,
+	`status` SMALLINT DEFAULT 1
+);
+
+INSERT INTO timecard_time(userid, `start`) VALUES('0001', NOW());
+INSERT INTO timecard_time(userid, `start`) VALUES('0002', NOW());
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

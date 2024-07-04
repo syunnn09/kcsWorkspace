@@ -2,10 +2,12 @@ package com.example.demo.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.consts.Const.TimecardStatus;
 import com.example.demo.entity.Bbs;
 import com.example.demo.entity.Facility;
 import com.example.demo.entity.FacilityReserve;
@@ -57,16 +59,23 @@ public class PortalServiceImpl implements PortalService {
 	@Autowired
 	TimecardRepository timecardRepository;
 
-	public <T> List<T> convertToArray(Iterable<T> obj) {
+	public <T> List<T> convertToList(Iterable<T> obj) {
 		List<T> list = new ArrayList<>();
 		obj.forEach(list::add);
 		return list;
 	}
 
+	public <T> T get(Optional<T> obj) {
+		if (obj.isEmpty()) {
+			return null;
+		}
+		return obj.get();
+	}
+
 	@Override
 	public List<Thread> getAllThreads() {
 		Iterable<Thread> threads = threadRepository.findAll();
-		return convertToArray(threads);
+		return convertToList(threads);
 	}
 
 	@Override
@@ -113,7 +122,7 @@ public class PortalServiceImpl implements PortalService {
 
 	@Override
 	public Work findWork(int workId) {
-		return workRepository.findById(workId).get();
+		return get(workRepository.findById(workId));
 	}
 
 	@Override
@@ -124,13 +133,13 @@ public class PortalServiceImpl implements PortalService {
 	@Override
 	public List<Facility> getFacilities() {
 		Iterable<Facility> facilities = facilityRepository.findAll();
-		return convertToArray(facilities);
+		return convertToList(facilities);
 	}
 
 	@Override
 	public List<FacilityReserve> getReserves() {
 		Iterable<FacilityReserve> reserves = facilityReserveRepository.findAll();
-		return convertToArray(reserves);
+		return convertToList(reserves);
 	}
 
 	@Override
@@ -140,7 +149,7 @@ public class PortalServiceImpl implements PortalService {
 
 	@Override
 	public Phone getPhoneById(int phoneId) {
-		return phoneRepository.findById(phoneId).get();
+		return get(phoneRepository.findById(phoneId));
 	}
 
 	@Override
@@ -166,6 +175,19 @@ public class PortalServiceImpl implements PortalService {
 
 	@Override
 	public Timecard getTimecard(String userid) {
-		return timecardRepository.findById(userid).get();
+		Optional<Timecard> card  = timecardRepository.findById(userid);
+		return get(card);
+	}
+
+	@Override
+	public void saveTimecard(String userid) {
+		Timecard card = new Timecard(userid, TimecardStatus.LEAVING.getStatus(), true);
+		timecardRepository.save(card);
+	}
+
+	@Override
+	public List<Timecard> getCards() {
+		Iterable<Timecard> cards = timecardRepository.findAll();
+		return convertToList(cards);
 	}
 }
