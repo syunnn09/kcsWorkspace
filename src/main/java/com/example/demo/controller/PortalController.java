@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -108,11 +108,26 @@ public class PortalController {
 		return "redirect:/portal";
 	}
 
-	List<String> texts = new ArrayList<>();
+	@GetMapping("edit/{id}")
+	public String edit(@PathVariable int id, Model model) {
+		ScheduleForm form = portalService.getScheduleForm(id);
+		model.addAttribute("scheduleForm", form);
+		return "regist";
+	}
+
+	@PostMapping("edit/{id}")
+	public String update(@PathVariable int id, ScheduleForm form) {
+		User user = getUser();
+		if (user == null) {
+			return redirectLogin();
+		}
+
+		scheduleService.save(form, user.getUserid());
+		return "redirect:/portal";
+	}
 
 	@GetMapping("bbs")
 	public String bbs(Model model) {
-		model.addAttribute("bbs", texts);
 		List<Thread> threads = portalService.getAllThreads();
 		model.addAttribute("threads", threads);
 		return "bbs";

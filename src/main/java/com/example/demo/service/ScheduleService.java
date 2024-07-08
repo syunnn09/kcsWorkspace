@@ -15,4 +15,5 @@ public interface ScheduleService {
 
 	public void save(ScheduleForm form, String userid);
 	public void save(Schedule schedule);
+	public void update(ScheduleForm form);
 }

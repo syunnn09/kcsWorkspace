@@ -142,7 +142,7 @@ const days = ['日','月','火','水','木','金','土'];
 (function() {
     let timer = setTimeout(function main() {
         const now = new Date();
-        const day = days[now.getDate()];
+        const day = days[now.getDay()];
         date.innerHTML = `${now.toLocaleDateString('sv-SE')} (${day})`;
         const hour = ('0' + now.getHours()).slice(-2);
         const minute = ('0' + now.getMinutes()).slice(-2);

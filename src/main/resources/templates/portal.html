@@ -83,7 +83,9 @@ p {
                         </div>
                         <div class="schedules">
                             <div th:each="schedule : ${map.value.schedules}" class="d-flex justify-content-between">
-                                <p th:text="${schedule.title}"></p>
+                                <a th:href="@{/portal/edit/{id}(id=${schedule.id})}">
+                                    <p th:text="${schedule.title}"></p>
+                                </a>
                                 <p><span th:text="${schedule.startTime}"></span> ~ <span th:text="${schedule.endTime}"></span></p>
                             </div>
                         </div>

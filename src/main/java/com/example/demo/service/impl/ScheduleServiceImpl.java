@@ -50,4 +50,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void save(Schedule schedule) {
 		repo.save(schedule);
 	}
+
+	@Override
+	public void update(ScheduleForm form) {
+		Schedule schedule = new Schedule(form);
+		repo.save(schedule);
+	}
 }

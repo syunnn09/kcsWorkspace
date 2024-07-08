@@ -18,11 +18,13 @@ import com.example.demo.entity.TimecardTime;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
+import com.example.demo.form.ScheduleForm;
 import com.example.demo.form.WorkDetail;
 import com.example.demo.repository.BbsRepository;
 import com.example.demo.repository.FacilityRepository;
 import com.example.demo.repository.FacilityReserveRepository;
 import com.example.demo.repository.PhoneRepository;
+import com.example.demo.repository.ScheduleRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.TimecardRepository;
 import com.example.demo.repository.TimecardTimeRepository;
@@ -63,6 +65,9 @@ public class PortalServiceImpl implements PortalService {
 
 	@Autowired
 	TimecardTimeRepository timecardTimeRepository;
+
+	@Autowired
+	ScheduleRepository scheduleRepository;
 
 	public <T> List<T> convertToList(Iterable<T> obj) {
 		List<T> list = new ArrayList<>();
@@ -199,5 +204,10 @@ public class PortalServiceImpl implements PortalService {
 	@Override
 	public TimecardTime getTimecardTime(int id) {
 		return get(timecardTimeRepository.findById(id));
+	}
+
+	@Override
+	public ScheduleForm getScheduleForm(int id) {
+		return new ScheduleForm(get(scheduleRepository.findById(id)));
 	}
 }

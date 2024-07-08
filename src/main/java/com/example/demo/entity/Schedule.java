@@ -30,6 +30,11 @@ public class Schedule {
 		this.setTeam(form.isTeam());
 	}
 
+	public Schedule(ScheduleForm form) {
+		this(form, form.getUserid());
+		this.id = form.getId();
+	}
+
 	@Id
 	public int id;
 	public String userid;

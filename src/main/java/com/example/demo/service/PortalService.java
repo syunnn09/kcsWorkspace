@@ -12,6 +12,7 @@ import com.example.demo.entity.TimecardTime;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Work;
 import com.example.demo.form.BbsForm;
+import com.example.demo.form.ScheduleForm;
 import com.example.demo.form.WorkDetail;
 
 public interface PortalService {
@@ -57,4 +58,6 @@ public interface PortalService {
 	public List<Timecard> getCards();
 
 	public TimecardTime getTimecardTime(int id);
+
+	public ScheduleForm getScheduleForm(int id);
 }
