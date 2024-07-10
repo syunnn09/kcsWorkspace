@@ -122,7 +122,9 @@ public class PortalController {
 			return redirectLogin();
 		}
 
-		scheduleService.save(form, user.getUserid());
+		form.setId(id);
+		form.setUserid(user.getUserid());
+		scheduleService.update(form);
 		return "redirect:/portal";
 	}
 

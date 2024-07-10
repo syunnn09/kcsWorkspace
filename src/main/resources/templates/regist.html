@@ -28,12 +28,12 @@
                 </tr>
                 <tr class="py-3">
                     <td class="px-3">日時</td>
-                    <td><input th:field="*{date}" type="date" name="date" class="w-100"></td>
+                    <td><input th:field="*{date}" type="date" name="date" class="w-100" required></td>
                 </tr>
                 <tr class="py-3">
                     <td class="px-3">時間</td>
                     <td class="d-flex justify-content-between">
-                        <input type="time" th:field="*{startTime}"> ~ <input type="time" th:field="*{endTime}">
+                        <input type="time" th:field="*{startTime}" required> ~ <input type="time" th:field="*{endTime}" required>
                     </td>
                 </tr>
                 <tr class="py-3">

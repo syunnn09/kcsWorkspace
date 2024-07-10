@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 
 import com.example.demo.form.ScheduleForm;
@@ -15,10 +17,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Schedule {
+public class Schedule implements Persistable<Integer> {
 
 	public Schedule(ScheduleForm form, String userid) {
 		this.userid = userid;
+		this.setInt_id(form.getId());
 		this.setTitle(form.getTitle());
 		this.setStatus(form.getStatus());
 		this.setDate(CommonUtils.convertDate(form.getDate()));
@@ -28,15 +31,17 @@ public class Schedule {
 		this.setDetail(form.getDetail());
 		this.setPersonal(form.isPersonal());
 		this.setTeam(form.isTeam());
+		this.isNew = false;
 	}
 
 	public Schedule(ScheduleForm form) {
 		this(form, form.getUserid());
-		this.id = form.getId();
+		this.int_id = form.getId();
 	}
 
 	@Id
-	public int id;
+	@Column("id")
+	public int int_id;
 	public String userid;
 	public String title;
 	public String status;
@@ -52,4 +57,12 @@ public class Schedule {
 	public boolean isPersonal;
 	@Column(value="isTeam")
 	public boolean isTeam;
+
+	@Transient
+	public boolean isNew = true;
+
+	@Override
+	public Integer getId() {
+		return this.int_id;
+	}
 }

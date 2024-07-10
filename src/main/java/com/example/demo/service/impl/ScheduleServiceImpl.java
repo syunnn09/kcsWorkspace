@@ -43,6 +43,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public void save(ScheduleForm form, String userid) {
 		Schedule schedule = new Schedule(form, userid);
+		schedule.setNew(true);
 		this.save(schedule);
 	}
 
@@ -54,6 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public void update(ScheduleForm form) {
 		Schedule schedule = new Schedule(form);
+		schedule.setNew(false);
 		repo.save(schedule);
 	}
 }
