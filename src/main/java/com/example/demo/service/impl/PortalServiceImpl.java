@@ -210,4 +210,9 @@ public class PortalServiceImpl implements PortalService {
 	public ScheduleForm getScheduleForm(int id) {
 		return new ScheduleForm(get(scheduleRepository.findById(id)));
 	}
+
+	@Override
+	public Thread getThread(int id) {
+		return get(threadRepository.findById(id));
+	}
 }

@@ -15,8 +15,9 @@ p {
     <center>
         <h1>社内グループウェア</h1>
 
-        <div th:each="text : ${bbs}">
-            <p th:text="${text}"></p>
+        <div class="d-flex justify-content-around">
+            <a th:href="@{/portal/bbs/create}">新規スレッド作成</a>
+            <a th:href="@{/portal/}">ポータルへ</a>
         </div>
 
         <p>【スレッド一覧】</p>

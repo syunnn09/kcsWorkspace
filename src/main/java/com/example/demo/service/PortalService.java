@@ -60,4 +60,6 @@ public interface PortalService {
 	public TimecardTime getTimecardTime(int id);
 
 	public ScheduleForm getScheduleForm(int id);
+
+	public Thread getThread(int id);
 }

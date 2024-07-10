@@ -128,6 +128,11 @@ public class PortalController {
 
 	@GetMapping("bbs")
 	public String bbs(Model model) {
+		User user = getUser();
+		if (user == null) {
+			return redirectLogin();
+		}
+
 		List<Thread> threads = portalService.getAllThreads();
 		model.addAttribute("threads", threads);
 		return "bbs";
@@ -140,15 +145,16 @@ public class PortalController {
 			return redirectLogin();
 		}
 
-		List<Bbs> bbs = portalService.getBbs(id);
-		if (bbs.size() == 0) {
+		Thread thread = portalService.getThread(id);
+		if (thread == null) {
 			return "redirect:/portal/bbs";
 		}
+
+		List<Bbs> bbs = portalService.getBbs(id);
 		bbs.forEach(b -> b.setUser(portalService.getUser(b)));
-		String title = "プロ野球";
 		form.setThread_id(id);
 		model.addAttribute("bbs", bbs);
-		model.addAttribute("title", title);
+		model.addAttribute("title", thread.getTitle());
 		return "thread_detail";
 	}
 
@@ -169,15 +175,15 @@ public class PortalController {
 		return "redirect:/portal/bbs/thread?id=" + id;
 	}
 
-	@GetMapping("create_thread")
+	@GetMapping("bbs/create")
 	public String createThread() {
 		return "create_thread";
 	}
 
-	@PostMapping("create_thread")
+	@PostMapping("bbs/create")
 	public String create(@PathParam("title") String title) {
 		portalService.saveThread(title);
-		return "redirect:bbs";
+		return "redirect:/portal/bbs";
 	}
 
 	@GetMapping("facility")

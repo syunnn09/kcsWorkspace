@@ -110,7 +110,7 @@ public class TimecardApiController {
 		return card.getStatus();
 	}
 
-	@PostMapping("reload")
+	@PostMapping(value="reload", produces="text/html;charset=utf-8")
 	public String reload() {
 		if (getUser() == null) {
 			return Status.FAILED.status;
